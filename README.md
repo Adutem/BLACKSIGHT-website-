@@ -7,7 +7,7 @@ Optimized for lead conversion and user onboarding
 
 Seamless integration with BlackSight's AI backend
 
-🛠️ Tech Stack
+Tech Stack
 Framework: Next.js / React
 
 Styling: Tailwind CSS, Framer Motion
