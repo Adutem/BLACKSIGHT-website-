@@ -15,7 +15,7 @@
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
+    "resolveJsonModule":"bundler",
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
