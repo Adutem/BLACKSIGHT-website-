@@ -57,12 +57,13 @@ export const Pricing: React.FC = () => {
           )}
          {selectedPlan === "ascend" && (
             <iframe
-               src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTo1MTNKNHdH"
-               width="100%"
+              src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTo1MTNKNHdH"
+              width="100%"
                height="800"
-              frameBorder="0"
-              style={{border: "none"}}
->           </iframe>
+               
+             title = "ascend"
+             >         
+               </iframe>
           )}
           {selectedPlan === "pinnacle" && (
             <iframe

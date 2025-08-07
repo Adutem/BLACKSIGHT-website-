@@ -20,9 +20,9 @@ const steps = [
 ];
 
 export const JourneySteps: React.FC = () => (
-  <section className="bg-white py-12 px-4">
-    <h2 className="text-3xl font-bold text-center mb-10">Your Journey, Step by Step</h2>
-    <div>
+  <section className="bg-white py-6 sm:py-12 px-2 sm:px-4">
+    <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-10">Your Journey, Step by Step</h2>
+    <div className="space-y-6 sm:space-y-8">
       {steps.map((step, i) => (
         <StepCard key={i} {...step} />
       ))}
