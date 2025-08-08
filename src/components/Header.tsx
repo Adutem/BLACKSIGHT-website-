@@ -1,22 +1,144 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from "react"
+import { Link, NavLink, useLocation } from "react-router-dom"
 
-export const Header: React.FC = () => (
-  <header className="flex items-center justify-between py-2 sm:py-4 px-4 sm:px-8 bg-white shadow">
-    <div className="flex items-center gap-1 sm:gap-2">
-      <img src="/assets/blacksight-logo.svg" alt="Blacksight Logo" className="h-6 sm:h-8 w-auto" />
-      <span className="font-bold text-lg sm:text-xl text-blue-700">Blacksight</span>
-    </div>
-    <nav className="hidden md:flex gap-3 sm:gap-6 text-gray-700 font-medium">
-      <Link to="/" className="text-sm sm:text-base">Home</Link>
-      <Link to="/products" className="text-sm sm:text-base">Products</Link>
-      <Link to="/pricing" className="text-sm sm:text-base">Pricing</Link>
-      <Link to="/about" className="text-sm sm:text-base">About Us</Link>
-      <Link to="/contact" className="text-sm sm:text-base">Contact</Link>
-    </nav>
-    <div className="flex gap-1 sm:gap-2">
-      <button className="bg-blue-600 text-white px-3 sm:px-6 py-1 sm:py-2 rounded-lg shadow-md hover:bg-blue-700 transition text-sm sm:text-base">Sign In</button>
-      <button className="bg-white text-blue-600 px-3 sm:px-6 py-1 sm:py-2 rounded-lg shadow-md hover:bg-blue-50 transition text-sm sm:text-base">Sign Up</button>
-    </div>
-  </header>
-);
+export const Header: React.FC = () => {
+  const [open, setOpen] = React.useState(false)
+  const location = useLocation()
+
+  // Close mobile menu on route change
+  React.useEffect(() => {
+    setOpen(false)
+  }, [location.pathname])
+
+  const links = [
+    { to: "/", label: "Home" },
+    { to: "/products", label: "Products" },
+    { to: "/pricing", label: "Pricing" },
+    { to: "/about", label: "About Us" },
+    { to: "/contact", label: "Contact" },
+  ] as const
+
+  const baseLink =
+    "relative px-2 py-1 text-sm sm:text-base transition-colors duration-200"
+  const activeLink =
+    "text-blue-600 font-semibold after:absolute after:left-1/2 after:-translate-x-1/2 after:-bottom-1 after:h-[2px] after:w-6 after:rounded-full after:bg-blue-600"
+  const inactiveLink = "text-gray-700 hover:text-gray-900"
+
+  return (
+    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-2 sm:py-3">
+        {/* Brand */}
+        <Link to="/" className="flex items-center gap-2">
+          <img
+            src="/assets/blacksight-logo.svg"
+            alt="Blacksight Logo"
+            className="h-7 w-auto sm:h-8"
+          />
+          <span className="text-lg sm:text-xl font-bold text-blue-700">
+            Blacksight
+          </span>
+        </Link>
+
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-5">
+          {links.map((l) => (
+            <NavLink
+              key={l.to}
+              to={l.to}
+              className={({ isActive }) =>
+                [baseLink, isActive ? activeLink : inactiveLink].join(" ")
+              }
+            >
+              {l.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* Actions (always visible) */}
+        <div className="hidden sm:flex items-center gap-2">
+          <Link to="/signin">
+            <button className="rounded-lg bg-blue-600 px-4 py-2 text-sm sm:text-base font-medium text-white shadow-md transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+              Sign In
+            </button>
+          </Link>
+          <Link to="/signup">
+            <button className="rounded-lg bg-white px-4 py-2 text-sm sm:text-base font-medium text-blue-600 shadow-md ring-1 ring-inset ring-blue-200 transition hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+              Sign Up
+            </button>
+          </Link>
+        </div>
+
+        {/* Mobile hamburger */}
+        <button
+          type="button"
+          className="md:hidden inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          aria-controls="mobile-menu"
+          aria-expanded={open}
+          onClick={() => setOpen((s) => !s)}
+        >
+          <span className="sr-only">Open main menu</span>
+          {/* Hamburger / Close */}
+          <svg
+            className={`h-6 w-6 transition-transform ${open ? "rotate-90" : ""}`}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            {open ? (
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+      </div>
+
+      {/* Mobile menu */}
+      <div
+        id="mobile-menu"
+        className={[
+          "md:hidden overflow-hidden border-t border-gray-100",
+          "transition-[max-height,opacity] duration-300 ease-out",
+          open ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
+        ].join(" ")}
+      >
+        <nav className="px-4 sm:px-6 py-3 space-y-1">
+          {links.map((l) => (
+            <NavLink
+              key={l.to}
+              to={l.to}
+              className={({ isActive }) =>
+                [
+                  "block rounded-md px-3 py-2 text-base",
+                  isActive
+                    ? "bg-blue-50 text-blue-700 font-semibold"
+                    : "text-gray-700 hover:bg-gray-50",
+                ].join(" ")
+              }
+            >
+              {l.label}
+            </NavLink>
+          ))}
+
+          {/* Mobile actions */}
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <Link to="/signin" className="col-span-1">
+              <button className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-md transition hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                Sign In
+              </button>
+            </Link>
+            <Link to="/signup" className="col-span-1">
+              <button className="w-full rounded-lg bg-white px-4 py-2 text-sm font-medium text-blue-600 shadow-md ring-1 ring-inset ring-blue-200 transition hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                Sign Up
+              </button>
+            </Link>
+          </div>
+        </nav>
+      </div>
+    </header>
+  )
+}
+
+export default Header

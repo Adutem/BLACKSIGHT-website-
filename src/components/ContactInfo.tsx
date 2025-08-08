@@ -314,4 +314,4 @@ export const ContactInfo: React.FC = () => {
       </div>
     </div>
   );
-};
+}

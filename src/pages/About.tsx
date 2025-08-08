@@ -98,13 +98,13 @@ export const About: React.FC = () => {
 
         @keyframes pulse {
           0% {
-            box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+            box-shadow: 0 0 0 0 hsla(177, 70%, 75%, 0.87);
           }
           70% {
-            box-shadow: 0 0 0 15px rgba(99, 102, 241, 0);
+            box-shadow: 0 0 0 15px #43d4e7ea;
           }
           100% {
-            box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+            box-shadow: 0 0 0 0 hsla(184, 76%, 60%, 0.96);
           }
         }
 
@@ -180,7 +180,7 @@ export const About: React.FC = () => {
           left: -2px;
           right: -2px;
           bottom: -2px;
-          background: linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899, #6366f1);
+          background: linear-gradient(45deg, #63f1deff, hsla(180, 77%, 77%, 1.00), rgba(145, 235, 238, 1), #a1ebf5ff);
           border-radius: inherit;
           z-index: -1;
           opacity: 0;
@@ -205,7 +205,7 @@ export const About: React.FC = () => {
           left: 0;
           width: 0;
           height: 3px;
-          background: linear-gradient(90deg, #6366f1, #8b5cf6);
+          background: linear-gradient(90deg, rgba(145, 240, 227, 1), rgba(159, 245, 241, 1));
           transition: width 0.5s ease;
         }
 
@@ -227,7 +227,7 @@ export const About: React.FC = () => {
           width: 10px;
           height: 10px;
           border-radius: 50%;
-          background: #6366f1;
+          background: #63f1f1ff;
           opacity: 0;
           transition: opacity 0.3s ease;
         }

@@ -2,11 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    @apply text-mobile xs:text-base;
-  }
-  body {
-    @apply bg-white text-gray-800 p-mobile-p sm:p-tablet-p;
-  }
-}

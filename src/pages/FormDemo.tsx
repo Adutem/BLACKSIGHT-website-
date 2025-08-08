@@ -1,203 +1,225 @@
-import React, { useState } from 'react';
+import React, { useState } from "react"
 
-const FormDemo = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+type DemoForm = {
+  firstName: string
+  lastName: string
+  email: string
+  company: string
+  teamSize: string
+}
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Clear error when user types
-    if (errors[name as keyof typeof errors]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
+type Errors = Partial<Record<keyof DemoForm, string>>
 
-  const validateForm = () => {
-    let valid = true;
-    const newErrors = { name: '', email: '', message: '' };
-    
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-      valid = false;
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-      valid = false;
-    }
-    
-    if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
-      valid = false;
-    }
-    
-    setErrors(newErrors);
-    return valid;
-  };
+const initialForm: DemoForm = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  company: "",
+  teamSize: "",
+}
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (validateForm()) {
-      // In a real app, you would submit the form data to a server here
-      console.log('Form submitted:', formData);
-      setIsSubmitted(true);
-    }
-  };
+export default function FormDemo() {
+  const [form, setForm] = useState<DemoForm>(initialForm)
+  const [errors, setErrors] = useState<Errors>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  const [resent, setResent] = useState(false)
 
-  const handleReset = () => {
-    setIsSubmitted(false);
-    setFormData({ name: '', email: '', message: '' });
-    setErrors({ name: '', email: '', message: '' });
-  };
+  const validate = (): boolean => {
+    const e: Errors = {}
+    if (!form.firstName.trim()) e.firstName = "First name is required"
+    if (!form.lastName.trim()) e.lastName = "Last name is required"
+    if (!form.email.trim()) e.email = "Email is required"
+    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Enter a valid email"
+    // company and teamSize optional in the reference UI
+    setErrors(e)
+    return Object.keys(e).length === 0
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setForm((f) => ({ ...f, [name]: value }))
+    if (errors[name as keyof DemoForm]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }))
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!validate()) return
+    setIsSubmitting(true)
+    // Simulate request
+    await new Promise((r) => setTimeout(r, 1200))
+    setIsSubmitting(false)
+    setSubmitted(true)
+  }
+
+  const handleOpenEmailApp = () => {
+    // Tries to open default mail client compose
+    window.location.href = "mailto:"
+  }
+
+  const handleResend = async () => {
+    setResent(false)
+    await new Promise((r) => setTimeout(r, 600))
+    setResent(true)
+    setTimeout(() => setResent(false), 2000)
+  }
+
+  const Field = ({
+    label,
+    name,
+    type = "text",
+    placeholder,
+    required,
+  }: {
+    label: string
+    name: keyof DemoForm
+    type?: string
+    placeholder: string
+    required?: boolean
+  }) => (
+    <div>
+      <label htmlFor={name} className="mb-1 block text-sm font-semibold text-gray-700">
+        {label}
+      </label>
+      <input
+        id={name}
+        name={name}
+        type={type}
+        value={form[name]}
+        onChange={handleChange}
+        required={required}
+        placeholder={placeholder}
+        className={[
+          "w-full rounded-lg border bg-white px-3.5 py-2.5 text-[15px] outline-none transition",
+          errors[name]
+            ? "border-red-400 focus:ring-2 focus:ring-red-200"
+            : "border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100",
+        ].join(" ")}
+      />
+      {errors[name] && <p className="mt-1 text-xs text-red-500">{errors[name]}</p>}
+    </div>
+  )
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-center">
-          <h1 className="text-2xl font-bold text-white">Contact Us</h1>
-          <p className="text-blue-100 mt-1">
-            {isSubmitted ? 'Thank you for your message!' : 'We\'d love to hear from you'}
-          </p>
-        </div>
+    <div className="min-h-screen w-full bg-white">
+      {!submitted ? (
+        <div className="mx-auto max-w-3xl px-4 pt-10 sm:pt-14">
+          <h1 className="text-center text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
+            {"Get a full demo of"} <br className="hidden sm:block" /> {"how Blacksight works"}
+          </h1>
 
-        {/* Form View */}
-        {!isSubmitted ? (
-          <div className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none transition ${
-                    errors.name 
-                      ? 'border-red-500 focus:ring-red-200' 
-                      : 'border-gray-300 focus:ring-blue-200 focus:border-blue-500'
-                  }`}
-                  placeholder="John Doe"
-                />
-                {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none transition ${
-                    errors.email 
-                      ? 'border-red-500 focus:ring-red-200' 
-                      : 'border-gray-300 focus:ring-blue-200 focus:border-blue-500'
-                  }`}
-                  placeholder="john@example.com"
-                />
-                {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows={4}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:outline-none transition ${
-                    errors.message 
-                      ? 'border-red-500 focus:ring-red-200' 
-                      : 'border-gray-300 focus:ring-blue-200 focus:border-blue-500'
-                  }`}
-                  placeholder="Your message here..."
-                ></textarea>
-                {errors.message && <p className="mt-1 text-sm text-red-500">{errors.message}</p>}
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                Send Message
-              </button>
-            </form>
-          </div>
-        ) : (
-          /* Success View with Large Icon */
-          <div className="p-8 text-center">
-            {/* Large Success Icon */}
-            <div className="flex justify-center mb-6">
-              <div className="relative">
-                {/* Outer circle with gradient */}
-                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-green-400 to-teal-500 flex items-center justify-center shadow-lg">
-                  {/* Inner white circle */}
-                  <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center">
-                    {/* Checkmark icon */}
-                    <svg className="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                  </div>
-                </div>
-                
-                {/* Animated rings around the icon */}
-                <div className="absolute inset-0 rounded-full border-4 border-green-200 animate-ping opacity-75"></div>
-              </div>
-            </div>
-            
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">Message Sent Successfully!</h2>
-            <p className="text-gray-600 mb-2">
-              Thank you, <span className="font-semibold text-indigo-600">{formData.name}</span>!
-            </p>
-            <p className="text-gray-600 mb-6">
-              We've received your message and will get back to you at <span className="font-semibold text-indigo-600">{formData.email}</span> as soon as possible.
-            </p>
-            
-            <div className="bg-green-50 rounded-lg p-4 mb-6 border border-green-100">
-              <p className="text-green-700 text-sm">
-                <span className="font-medium">What happens next?</span> Our team will review your message and respond within 24-48 hours.
+          <div className="mx-auto mt-8 sm:mt-10 w-full rounded-3xl border border-blue-100 bg-gradient-to-br from-[#f6f9ff] to-white p-5 sm:p-8 shadow-[0_10px_30px_rgba(2,6,23,0.06)]">
+            <div className="text-center">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-blue-600">
+                Get a demo from our chatbot Agent
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">
+                Fill out the form below and we&apos;ll get you started with a personalized demo
               </p>
             </div>
-            
-            <button
-              onClick={handleReset}
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300"
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-              </svg>
-              Send Another Message
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
 
-export default FormDemo;
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              <Field
+                label="First Name"
+                name="firstName"
+                placeholder="Enter First Name"
+                required
+              />
+              <Field
+                label="Last Name"
+                name="lastName"
+                placeholder="Enter last Name"
+                required
+              />
+              <Field
+                label="Business Email"
+                name="email"
+                type="email"
+                placeholder="Enter Email Address"
+                required
+              />
+              <Field
+                label="Company/ Business Name"
+                name="company"
+                placeholder="Enter Business or company’s name"
+              />
+              <Field
+                label="Team Size"
+                name="teamSize"
+                placeholder="Market Team Size"
+              />
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="mx-auto block rounded-xl bg-blue-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {isSubmitting ? "Submitting…" : "Get Demo"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      ) : (
+        // Success view (matches demo2.PNG)
+        <div className="mx-auto flex max-w-xl flex-col items-center px-4 py-16 text-center">
+          {/* Badge */}
+          <div className="relative mb-6">
+            <div className="grid h-28 w-28 place-items-center rounded-full bg-blue-50">
+              <svg
+                viewBox="0 0 48 48"
+                className="h-16 w-16 text-blue-500"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* Badge squiggle */}
+                <path d="M10 22c-1-8 6-14 14-14s15 7 14 16c-1 8-7 13-14 13-3 0-5-1-7-2" />
+                {/* Check */}
+                <path d="M16 26l6 6 12-14" />
+              </svg>
+            </div>
+            <span className="absolute inset-0 -z-10 animate-ping rounded-full bg-blue-100" />
+          </div>
+
+          <h2 className="text-2xl font-semibold text-gray-900">We have sent you a mail</h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Please check your Inbox or Spam Folder
+          </p>
+
+          <button
+            onClick={handleOpenEmailApp}
+            className="mt-5 rounded-full bg-blue-600 px-5 py-2.5 text-white shadow-sm hover:bg-blue-700"
+          >
+            Open Email App
+          </button>
+
+          <button
+            onClick={handleResend}
+            className="mt-3 text-sm font-medium text-blue-600 hover:underline"
+          >
+            Resend Email
+          </button>
+          {resent && (
+            <div className="mt-2 text-xs text-green-600">Resent! Check your inbox.</div>
+          )}
+
+          <p className="mt-8 text-xs text-gray-500">
+            Didn&apos;t receive the email? Check your spam folder or{" "}
+            <a
+              className="text-blue-600 underline underline-offset-2"
+              href="mailto:support@blacksight.ai"
+            >
+              contact support
+            </a>
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
