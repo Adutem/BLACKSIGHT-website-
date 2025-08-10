@@ -7,10 +7,10 @@ export const Pricing: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<"solo" | "ascend" | "pinnacle">("solo");
 
   return (
-    <main className="bg-black text-white min-h-screen flex flex-col font-sans p-4 sm:p-8">
+    <main className="bg-white text-black min-h-screen flex flex-col font-sans p-4 sm:p-8">
       <section className="flex-grow flex flex-col items-center justify-center text-center max-w-7xl mx-auto w-full">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">Choose a Pricing Plan</h1>
-        <p className="text-gray-300 text-sm sm:text-base mb-6 max-w-2xl">
+        <p className="text-black-300 text-sm sm:text-base mb-6 max-w-2xl">
           Because you deserve tools that save time, boost results, and grow with you.
         </p>
 
@@ -20,7 +20,7 @@ export const Pricing: React.FC = () => {
             className={`w-full sm:w-auto border px-4 py-3 rounded-full transition-colors duration-300 ${
               selectedPlan === "solo"
                 ? "bg-blue-500 border-blue-500 text-white shadow-lg"
-                : "border-gray-600 hover:bg-gray-800"
+                : "border-blue-500 hover:bg-white-400 text-blue-500"
             }`}
             onClick={() => setSelectedPlan("solo")}
           >
@@ -61,14 +61,13 @@ export const Pricing: React.FC = () => {
             ></iframe>
           )}
           {selectedPlan === "ascend" && (
-            <iframe
-              src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTo1MTNKNHdH"
-              width="100%"
-              height="800"
-              frameBorder="0"
-              style={{ border: "none" }}
-              title="Ascend Pricing"
-            ></iframe>
+            <iframe 
+       src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTo1MTNKNHdH"
+        width="100%"
+        height="800"
+        frameBorder="0"
+        style={{border: "none"}}
+></iframe>
           )}
           {selectedPlan === "pinnacle" && (
             <iframe

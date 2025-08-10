@@ -1,338 +1,297 @@
-'use client'
+"use client"
 
-import React, { useCallback, useState } from 'react'
+import type React from "react"
+import { useCallback, useState } from "react"
 import ReactFlow, {
-  Background,
   applyNodeChanges,
   applyEdgeChanges,
-  Node,
-  Edge,
-  NodeChange,
-  EdgeChange,
-  Connection,
+  type Node,
+  type Edge,
+  type NodeChange,
+  type EdgeChange,
+  type Connection,
   addEdge,
-  NodeTypes,
+  type NodeTypes,
   Handle,
   Position,
   MarkerType,
-} from 'reactflow'
-import 'reactflow/dist/style.css'
+} from "reactflow"
+import "reactflow/dist/style.css"
 
 // Icons
-import {
-  FaBolt,
-  FaRobot,
-  FaWhatsapp,
-  FaClipboardList,
-  FaCogs,
-  FaTh, // Send Notification (grid icon)
-  FaEnvelope,
-  FaPhoneAlt, // Lead Form node icon (kept for parity with provided list)
-} from 'react-icons/fa'
+import { FaBolt, FaRobot, FaWhatsapp, FaClipboardList, FaCogs, FaTh, FaEnvelope } from "react-icons/fa"
 
-import LeadForm from './lead-form'
-
-// Type for node data
 interface AutomationNodeData {
-  typeLabel: string // e.g., "Trigger", "AI"
-  subLabel: string // e.g., "Bot Conversation Start", "AI Summarizer"
-  description?: string // e.g., "Conversation Completed", "Summarizes Message"
+  typeLabel: string
+  subLabel: string
+  description?: string
   icon: React.ComponentType<{ className?: string }>
   iconBgColor: string
   borderColor: string
   typeLabelColor: string
 }
 
-// Custom node types
+// Compact, clean node style to match the mockup
 const nodeTypes: NodeTypes = {
   automation: ({ data }: { data: AutomationNodeData }) => (
     <div
-      className="rounded-xl border shadow-sm flex flex-col overflow-hidden"
+      className="rounded-xl border flex flex-col overflow-hidden"
       style={{
         borderColor: data.borderColor,
-        minWidth: '200px',
-        backgroundColor: 'white',
+        minWidth: 220,
+        background: "white",
+        boxShadow: "0 8px 20px rgba(2,6,23,0.06)",
       }}
     >
-      {/* Top: Icon + Labels */}
-      <div className="flex items-center p-3">
+      <div className="flex items-center px-3 py-2.5">
         <div
-          className="flex items-center justify-center w-8 h-8 rounded-md mr-3 flex-shrink-0"
+          className="mr-2.5 grid h-7 w-7 place-items-center rounded-md flex-shrink-0"
           style={{ backgroundColor: data.iconBgColor }}
         >
-          <data.icon className="text-white text-base" />
+          <data.icon className="text-white text-[12px]" />
         </div>
-        <div className="flex flex-col flex-grow">
-          <div className="font-semibold text-sm" style={{ color: data.typeLabelColor }}>
+        <div className="flex min-w-0 flex-col">
+          <div className="text-[13px] font-semibold" style={{ color: data.typeLabelColor }}>
             {data.typeLabel}
           </div>
-          <div className="text-gray-800 text-sm mt-0.5 leading-tight">
-            {data.subLabel}
-          </div>
+          <div className="mt-0.5 text-[13px] leading-tight text-gray-800">{data.subLabel}</div>
         </div>
       </div>
+      {data.description && <div className="px-3 pb-2 pt-1 text-[11px] -mt-1 text-gray-500">{data.description}</div>}
 
-      {/* Bottom: Description */}
-      {data.description && (
-        <div className="text-xs text-gray-500 px-3 pb-2 pt-1 -mt-1">
-          {data.description}
-        </div>
-      )}
-
-      {/* Handles */}
+      {/* Subtle handles */}
       <Handle
         type="source"
         position={Position.Right}
-        className="w-2 h-2 bg-gray-300 rounded-full opacity-0 hover:opacity-100 transition-opacity"
+        className="h-2 w-2 rounded-full bg-gray-300 opacity-0 transition-opacity hover:opacity-100"
       />
       <Handle
         type="target"
         position={Position.Left}
-        className="w-2 h-2 bg-gray-300 rounded-full opacity-0 hover:opacity-100 transition-opacity"
+        className="h-2 w-2 rounded-full bg-gray-300 opacity-0 transition-opacity hover:opacity-100"
       />
     </div>
   ),
-
-  
 }
 
-// Initial nodes arranged to match the reference image
-type FlowNode = Node<AutomationNodeData | {}>
+// Layout coordinates closely mirroring the screenshot
+type FlowNode = Node<AutomationNodeData>
 const initialNodes: FlowNode[] = [
+  // Row 1
   {
-    id: 'trigger-1',
-    type: 'automation',
-    position: { x: 100, y: 100 },
+    id: "trigger-1",
+    type: "automation",
+    position: { x: 100, y: 70 },
     data: {
-      typeLabel: 'Trigger',
-      subLabel: 'Bot Conversation Start',
-      description: 'Conversation Completed',
+      typeLabel: "Trigger",
+      subLabel: "Bot Conversation Start",
+      description: "Conversation Completed",
       icon: FaBolt,
-      iconBgColor: '#4285F4', // Blue
-      borderColor: '#D1E0FF', // Light Blue
-      typeLabelColor: '#1A73E8', // Darker Blue
+      iconBgColor: "#4285F4",
+      borderColor: "#D1E0FF",
+      typeLabelColor: "#1A73E8",
     },
   },
   {
-    id: 'ai-1',
-    type: 'automation',
-    position: { x: 350, y: 100 },
+    id: "ai-1",
+    type: "automation",
+    position: { x: 340, y: 70 },
     data: {
-      typeLabel: 'AI',
-      subLabel: 'AI Summarizer',
-      description: 'Summarizes Message',
+      typeLabel: "AI",
+      subLabel: "AI Summarizer",
+      description: "Summarizes Message",
       icon: FaRobot,
-      iconBgColor: '#8E24AA', // Purple
-      borderColor: '#E8D1FF', // Light Purple
-      typeLabelColor: '#673AB7', // Darker Purple
+      iconBgColor: "#8E24AA",
+      borderColor: "#E8D1FF",
+      typeLabelColor: "#673AB7",
     },
   },
   {
-    id: 'whatsapp-1',
-    type: 'automation',
-    position: { x: 600, y: 100 },
+    id: "whatsapp-1",
+    type: "automation",
+    position: { x: 590, y: 70 },
     data: {
-      typeLabel: 'Action',
-      subLabel: 'Send WhatsApp Message',
-      description: '',
+      typeLabel: "Action",
+      subLabel: "Send WhatsApp Message",
       icon: FaWhatsapp,
-      iconBgColor: '#25D366', // WhatsApp Green
-      borderColor: '#D4EDDA', // Light Green
-      typeLabelColor: '#1E8449', // Darker Green
+      iconBgColor: "#25D366",
+      borderColor: "#D4EDDA",
+      typeLabelColor: "#1E8449",
     },
   },
 
+  // Row 2
   {
-    id: 'trigger-2',
-    type: 'automation',
-    position: { x: 100, y: 300 },
+    id: "trigger-2",
+    type: "automation",
+    position: { x: 100, y: 230 },
     data: {
-      typeLabel: 'Trigger',
-      subLabel: 'Voice AI Agent',
-      description: 'Conversation Completed',
+      typeLabel: "Trigger",
+      subLabel: "Voice AI Agent",
+      description: "Conversation Completed",
       icon: FaBolt,
-      iconBgColor: '#4285F4',
-      borderColor: '#D1E0FF',
-      typeLabelColor: '#1A73E8',
+      iconBgColor: "#4285F4",
+      borderColor: "#D1E0FF",
+      typeLabelColor: "#1A73E8",
     },
   },
   {
-    id: 'ai-2',
-    type: 'automation',
-    position: { x: 350, y: 300 },
+    id: "ai-2",
+    type: "automation",
+    position: { x: 340, y: 230 },
     data: {
-      typeLabel: 'AI',
-      subLabel: 'AI Summarizer',
-      description: 'Summarize Message',
+      typeLabel: "AI",
+      subLabel: "AI Summarizer",
+      description: "Summarize Message",
       icon: FaRobot,
-      iconBgColor: '#8E24AA',
-      borderColor: '#E8D1FF',
-      typeLabelColor: '#673AB7',
+      iconBgColor: "#8E24AA",
+      borderColor: "#E8D1FF",
+      typeLabelColor: "#673AB7",
     },
   },
   {
-    id: 'action-1',
-    type: 'automation',
-    position: { x: 600, y: 250 },
+    id: "action-1",
+    type: "automation",
+    position: { x: 590, y: 205 },
     data: {
-      typeLabel: 'Action',
-      subLabel: 'Send SMS',
-      description: '',
+      typeLabel: "Action",
+      subLabel: "Send SMS",
       icon: FaClipboardList,
-      iconBgColor: '#FB8C00', // Orange
-      borderColor: '#FFE0B2', // Light Orange
-      typeLabelColor: '#EF6C00', // Darker Orange
+      iconBgColor: "#FB8C00",
+      borderColor: "#FFE0B2",
+      typeLabelColor: "#EF6C00",
     },
   },
   {
-    id: 'logic-1',
-    type: 'automation',
-    position: { x: 600, y: 350 },
+    id: "logic-1",
+    type: "automation",
+    position: { x: 590, y: 285 },
     data: {
-      typeLabel: 'Logic',
-      subLabel: 'Wait/Delay Timer',
-      description: 'Wait For Two Days',
+      typeLabel: "Logic",
+      subLabel: "Wait/Delay Timer",
+      description: "Wait For Two Days",
       icon: FaCogs,
-      iconBgColor: '#4CAF50', // Green
-      borderColor: '#D4EDDA', // Light Green
-      typeLabelColor: '#388E3C', // Darker Green
+      iconBgColor: "#4CAF50",
+      borderColor: "#D4EDDA",
+      typeLabelColor: "#388E3C",
     },
   },
   {
-    id: 'notification-1',
-    type: 'automation',
-    position: { x: 850, y: 300 },
+    id: "notification-1",
+    type: "automation",
+    position: { x: 840, y: 235 },
     data: {
-      typeLabel: 'Action',
-      subLabel: 'Send Notification',
-      description: '',
-      icon: FaTh, // Grid icon
-      iconBgColor: '#4285F4',
-      borderColor: '#D1E0FF',
-      typeLabelColor: '#1A73E8',
+      typeLabel: "Action",
+      subLabel: "Send Notification",
+      icon: FaTh,
+      iconBgColor: "#4285F4",
+      borderColor: "#D1E0FF",
+      typeLabelColor: "#1A73E8",
     },
   },
   {
-    id: 'mail-1',
-    type: 'automation',
-    position: { x: 850, y: 400 },
+    id: "mail-1",
+    type: "automation",
+    position: { x: 840, y: 320 },
     data: {
-      typeLabel: 'Action',
-      subLabel: 'Send Mail',
-      description: '',
+      typeLabel: "Action",
+      subLabel: "Send Mail",
       icon: FaEnvelope,
-      iconBgColor: '#D32F2F', // Red
-      borderColor: '#FFCDD2', // Light Red
-      typeLabelColor: '#C62828', // Darker Red
+      iconBgColor: "#D32F2F",
+      borderColor: "#FFCDD2",
+      typeLabelColor: "#C62828",
     },
-  },
-  {
-    id: 'lead-form-node',
-    type: 'leadFormNode',
-    position: { x: 100, y: 500 }, // Below the existing flow
-    data: {} as {},
   },
 ]
 
-// Initial edges (smoothstep, no arrows)
+// Thinner connectors with smooth curvature, no arrows
+const LINE = 1 // thinner than before
 const initialEdges: Edge[] = [
   {
-    id: 'e-trigger1-ai1',
-    source: 'trigger-1',
-    target: 'ai-1',
-    type: 'smoothstep',
-    style: { stroke: '#4285F4', strokeWidth: 2 }, // Blue
+    id: "e1",
+    source: "trigger-1",
+    target: "ai-1",
+    type: "smoothstep",
+    style: { stroke: "#4285F4", strokeWidth: LINE },
     markerEnd: { type: MarkerType.None },
   },
   {
-    id: 'e-ai1-whatsapp1',
-    source: 'ai-1',
-    target: 'whatsapp-1',
-    type: 'smoothstep',
-    style: { stroke: '#8E24AA', strokeWidth: 2 }, // Purple
+    id: "e2",
+    source: "ai-1",
+    target: "whatsapp-1",
+    type: "smoothstep",
+    style: { stroke: "#8E24AA", strokeWidth: LINE },
+    markerEnd: { type: MarkerType.None },
+  },
+
+  {
+    id: "e3",
+    source: "trigger-2",
+    target: "ai-2",
+    type: "smoothstep",
+    style: { stroke: "#4285F4", strokeWidth: LINE },
     markerEnd: { type: MarkerType.None },
   },
   {
-    id: 'e-trigger2-ai2',
-    source: 'trigger-2',
-    target: 'ai-2',
-    type: 'smoothstep',
-    style: { stroke: '#4285F4', strokeWidth: 2 }, // Blue
+    id: "e4",
+    source: "ai-2",
+    target: "action-1",
+    type: "smoothstep",
+    style: { stroke: "#8E24AA", strokeWidth: LINE },
     markerEnd: { type: MarkerType.None },
   },
   {
-    id: 'e-ai2-action1',
-    source: 'ai-2',
-    target: 'action-1',
-    type: 'smoothstep',
-    style: { stroke: '#8E24AA', strokeWidth: 2 }, // Purple
+    id: "e5",
+    source: "ai-2",
+    target: "logic-1",
+    type: "smoothstep",
+    style: { stroke: "#8E24AA", strokeWidth: LINE },
+    markerEnd: { type: MarkerType.None },
+  },
+
+  {
+    id: "e6",
+    source: "logic-1",
+    target: "notification-1",
+    type: "smoothstep",
+    style: { stroke: "#4CAF50", strokeWidth: LINE },
     markerEnd: { type: MarkerType.None },
   },
   {
-    id: 'e-ai2-logic1',
-    source: 'ai-2',
-    target: 'logic-1',
-    type: 'smoothstep',
-    style: { stroke: '#8E24AA', strokeWidth: 2 }, // Purple
-    markerEnd: { type: MarkerType.None },
-  },
-  {
-    id: 'e-logic1-notification1',
-    source: 'logic-1',
-    target: 'notification-1',
-    type: 'smoothstep',
-    style: { stroke: '#4CAF50', strokeWidth: 2 }, // Green
-    markerEnd: { type: MarkerType.None },
-  },
-  {
-    id: 'e-logic1-mail1',
-    source: 'logic-1',
-    target: 'mail-1',
-    type: 'smoothstep',
-    style: { stroke: '#4CAF50', strokeWidth: 2 }, // Green
-    markerEnd: { type: MarkerType.None },
-  },
-  {
-    id: 'e-ai2-leadform',
-    source: 'ai-2',
-    target: 'lead-form-node',
-    type: 'smoothstep',
-    style: { stroke: '#8E24AA', strokeWidth: 2 }, // Purple
+    id: "e7",
+    source: "logic-1",
+    target: "mail-1",
+    type: "smoothstep",
+    style: { stroke: "#4CAF50", strokeWidth: LINE },
     markerEnd: { type: MarkerType.None },
   },
 ]
 
-export const NodeBaseAutomation: React.FC = () => {
-  const [nodes, setNodes] = useState<FlowNode[]>(initialNodes)
+export default function NodeBaseAutomation() {
+  const [nodes, setNodes] = useState<Node<AutomationNodeData>[]>(initialNodes)
   const [edges, setEdges] = useState<Edge[]>(initialEdges)
 
-  const onNodesChange = useCallback(
-    (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    []
-  )
-  const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    []
-  )
+  const onNodesChange = useCallback((changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)), [])
+  const onEdgesChange = useCallback((changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)), [])
   const onConnect = useCallback(
-    (connection: Connection) => setEdges((eds) => addEdge(connection, eds)),
-    []
+    (connection: Connection) =>
+      setEdges((eds) =>
+        addEdge(
+          { ...connection, type: "smoothstep", markerEnd: { type: MarkerType.None }, style: { strokeWidth: LINE } },
+          eds,
+        ),
+      ),
+    [],
   )
 
   return (
-    <section className="py-12 bg-white">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-            Node Base Automation
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Visualize complex workflows with our intuitive node-based automation system.
-          </p>
-        </div>
+    <section className="py-8 bg-white">
+      <div className="mx-auto max-w-6xl px-4">
+        <h2 className="mb-5 text-center text-3xl md:text-4xl font-bold text-gray-800">Node Base Automation</h2>
 
-        <div className="bg-gray-50 rounded-xl p-8 border border-gray-200">
-          <div className="h-[900px] rounded-lg overflow-hidden">
+        {/* Smaller canvas area to match the mockup proportions */}
+        <div className="rounded-xl border border-gray-200 bg-white">
+          <div className="h-[440px] rounded-xl overflow-hidden">
             <ReactFlow
               nodes={nodes as Node[]}
               edges={edges}
@@ -341,16 +300,13 @@ export const NodeBaseAutomation: React.FC = () => {
               onConnect={onConnect}
               nodeTypes={nodeTypes}
               fitView
-              defaultViewport={{ x: 0, y: 0, zoom: 0.9 }}
-              connectionMode="loose"
-            >
-              <Background color="#f3f4f6" gap={20} />
-            </ReactFlow>
+              fitViewOptions={{ padding: 0.15, includeHiddenNodes: true }}
+              defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+              proOptions={{ hideAttribution: true }}
+            />
           </div>
         </div>
       </div>
     </section>
   )
 }
-
-export default NodeBaseAutomation

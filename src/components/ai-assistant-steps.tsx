@@ -1,5 +1,5 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
-import { UserPlus, BookMarked, Bot, Plug, Boxes, TypeIcon as type, LucideIcon } from 'lucide-react'
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { UserPlus, BookMarked, Bot, Plug, Boxes, type LucideIcon } from 'lucide-react';
 
 /**
  * AiAssistantSteps

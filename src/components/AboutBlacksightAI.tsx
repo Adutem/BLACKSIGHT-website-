@@ -8,7 +8,7 @@ export const AboutBlacksightAI: React.FC = () => (
       At Blacksight, we are committed to revolutionizing industries through AI-driven automation,
       intelligent decision-making, and enterprise-grade security solutions tailored for the future.
     </p>
-    <button className="bg-blue-500 text-white px-4 sm:px-5 py-2 rounded-lg shadow-md hover:bg-blue-600 transition text-sm sm:text-base">
+    <button className="bg-white-500 text-blue-500 px-4 sm:px-5 py-2  shadow-md hover:bg-blue-600 border-blue-500 transition text-sm sm:text-base">
       Learn more
     </button>
   </section>

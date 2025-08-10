@@ -44,7 +44,21 @@ export default function Products() {
         <SectionShell>
           <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 sm:gap-14">
             {/* Left: Phone with the Lead Form inside (matches screenshot) */}
-            <motion.div
+           
+           
+           <ProductCardV2
+                title="Nova Voice"
+                features={voiceFeatures}
+                price="$45 Monthly"
+                onRequestAccess={() =>
+                  alert("Request submitted for Nova Voice! Our team will contact you shortly.")
+                }
+              />
+           
+        
+            {/* Right: Voice product card */}
+            <div>
+             <motion.div
               initial={{ opacity: 0, y: 24, rotateY: 8 }}
               whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
               viewport={{ once: true, amount: 0.3 }}
@@ -55,16 +69,6 @@ export default function Products() {
               
             </motion.div>
 
-            {/* Right: Voice product card */}
-            <div>
-              <ProductCardV2
-                title="Nova Voice"
-                features={voiceFeatures}
-                price="$45 Monthly"
-                onRequestAccess={() =>
-                  alert("Request submitted for Nova Voice! Our team will contact you shortly.")
-                }
-              />
             </div>
           </div>
         </SectionShell>

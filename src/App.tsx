@@ -20,7 +20,7 @@ import WhyNovaDemo from "./pages/why-nova-demo";
 import  AnalyticsCtaDemo  from "./pages/analytics-cta-demo";
 import  FaqDemo  from "./pages/carousel-demo"; // Importing the carousel demo
 import JoinCommunitiesDemo from "./pages/join-communities-demo"; // Importing the join communities demo
-
+import { PhoneFormMockup } from "./components/PhoneFormMockUp";
 import { Footer } from "./components/Footer";
 
 const App: React.FC = () => {
@@ -37,13 +37,12 @@ const App: React.FC = () => {
               path="/"
               element={<>
                 <HeroSection />
+                
                 <section className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-white p-4">
       <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 max-w-2xl text-gray-800">
         Your Next Business Breakthrough Could Be a Call Away — Meet Nova
       </h2>
-      <PhoneMockup >
-        <LeadForm />
-      </PhoneMockup>
+                <PhoneFormMockup frameSrc="./assets/phonemockup.svg" screenRect={{ topPct: 8.5, leftPct: 6, widthPct: 88, heightPct: 83 }} />
     </section>
                 <JourneySteps />
                 <JourneyStepCarousel />
@@ -51,7 +50,7 @@ const App: React.FC = () => {
                 <AiAssistantSteps />
                 <AiVoiceHero />
                 <WhyNovaDemo />
-                <AnalyticsCtaDemo />
+
                 <FaqDemo />
                 <JoinCommunitiesDemo />
 
