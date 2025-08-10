@@ -14,12 +14,12 @@ interface LinkListProps {
 
 const LinkList: React.FC<LinkListProps> = ({ title, links }) => (
   <div className="flex flex-col">
-    <h4 className="font-bold mb-2 sm:mb-4 text-sm sm:text-base text-black">{title}</h4>
-    <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm">
+    <h4 className="font-bold mb-3 text-sm text-gray-800">{title}</h4>
+    <ul className="space-y-2 text-sm">
       {links.map((link) => (
         <li key={link.label} className="flex items-center">
-          <span className="text-xs mr-1 sm:mr-2">›</span>
-          <a href={link.href} className="text-black hover:text-blue-500 transition-colors">
+          <span className="text-xs mr-2 text-gray-600">✓</span>
+          <a href={link.href} className="text-gray-700 hover:text-blue-500 transition-colors">
             {link.label}
           </a>
         </li>
@@ -50,67 +50,70 @@ export const Footer: React.FC = () => {
   ];
 
   const socialLinks = [
-    { href: "https://instagram.com/blacksight", label: "Instagram", Icon: FaInstagram },
-    { href: "https://linkedin.com/company/blacksight", label: "LinkedIn", Icon: FaLinkedinIn },
-    { href: "https://facebook.com/blacksight", label: "Facebook", Icon: FaFacebookF },
-    { href: "https://x.com/blacksight", label: "X", Icon: RiTwitterXFill },
+    { href: "https://instagram.com/", label: "Instagram", Icon: FaInstagram },
+    { href: "https://linkedin.com/company/", label: "LinkedIn", Icon: FaLinkedinIn },
+    { href: "https://facebook.com/", label: "Facebook", Icon: FaFacebookF },
+    { href: "https://x.com/", label: "X", Icon: RiTwitterXFill },
   ];
 
   return (
-    <footer className="border-t border-gray-200 py-4 sm:py-8">
-      <div className="max-w-6xl mx-auto px-2 sm:px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {/* Column 1 - Logo and Tagline */}
-          <div className="mb-4 sm:mb-0">
-            <div className="mb-2 sm:mb-4">
-              <img
-                src="/images/Logo.jpg"
-                alt="BlackSight"
-                className="h-6 sm:h-8 w-auto"
-              />
+    <footer className="bg-white py-8">
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Upper Footer Section */}
+        <div className="flex flex-col lg:flex-row justify-between items-start mb-6">
+          {/* Left Side - Brand Identity */}
+          <div className="mb-6 lg:mb-0">
+            <div className="flex items-center mb-2">
+              {/* Blue logo - abstract eye/target design */}
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+                <div className="w-6 h-6 border-2 border-white rounded-full"></div>
+              </div>
+              <span className="font-bold text-lg text-gray-800">BlackSight</span>
             </div>
           </div>
 
-          {/* Column 2 - Quick Links */}
-          <LinkList title="Quick Links" links={quickLinks} />
-
-          {/* Column 3 - Company */}
-          <LinkList title="Company" links={companyLinks} />
-
-          {/* Column 4 - Resources and Social */}
-          <div className="mb-4 sm:mb-0">
+          {/* Middle Section - Navigation Links */}
+          <div className="flex flex-col sm:flex-row gap-8 mb-6 lg:mb-0">
+            <LinkList title="Quick Links" links={quickLinks} />
+            <LinkList title="Company" links={companyLinks} />
             <LinkList title="Resources" links={resourceLinks} />
-            
-            <div className="mt-2 sm:mt-4 flex space-x-2 sm:space-x-3">
+          </div>
+
+          {/* Right Side - Social Media */}
+          <div className="flex flex-col items-start">
+            <div className="flex space-x-3 mb-2">
               {socialLinks.map(({ href, Icon }) => (
                 <a 
                   key={href} 
                   href={href} 
-                  className="text-blue-500 hover:text-blue-600"
+                  className="text-blue-500 hover:text-blue-600 transition-colors"
                 >
-                  <Icon className="h-4 sm:h-5 w-4 sm:w-5" />
+                  <Icon className="h-5 w-5" />
                 </a>
               ))}
             </div>
-            <div className="mt-1 sm:mt-2 text-xs text-gray-500 space-x-1 sm:space-x-1">
+            <div className="text-sm text-gray-600">
               <span>Instagram</span>
-              <span>|</span>
+              <span className="mx-2">|</span>
               <span>LinkedIn</span>
-              <span>|</span>
+              <span className="mx-2">|</span>
               <span>Facebook</span>
-              <span>|</span>
+              <span className="mx-2">|</span>
               <span>X</span>
             </div>
           </div>
         </div>
 
-        {/* Bottom area with tagline and copyright */}
-        <div className="mt-4 sm:mt-6 pt-2 sm:pt-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center">
-          <div className="text-xs text-gray-500 mb-2 sm:mb-0">
-            <p>Automate your business with the smart BlackSight AI for Business</p>
-            <p>Unlock your business full potential today</p>
+        {/* Separator Line */}
+        <div className="border-t border-gray-400 mb-6"></div>
+
+        {/* Lower Footer Section */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+          <div className="text-sm text-gray-600 mb-4 sm:mb-0">
+            <p>Automate your business with the smart Blacksight AI for Business</p>
+            <p>Unlock your Business full Potential today</p>
           </div>
-          <div className="text-xs text-gray-500">
+          <div className="text-sm text-gray-600">
             © Copyright Reserved 2025 | Adutem Innovations
           </div>
         </div>

@@ -2,7 +2,6 @@ import React from "react"
 import { motion } from "framer-motion"
 import ProductCardV2 from "../components/product-card-v2"
 import ChatInterface from "../components/ChatInterface"
-import PhoneMockup from "../components/phone-mockup"
 import ExampleVoicePhone from "../components/VoiceInterface"
 
 export default function Products() {

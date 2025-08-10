@@ -31,7 +31,7 @@ interface AutomationNodeData {
   typeLabelColor: string
 }
 
-// Compact, clean node style to match the mockup
+// Compact, clean node style to match the mockup, with divider and magnet handles
 const nodeTypes: NodeTypes = {
   automation: ({ data }: { data: AutomationNodeData }) => (
     <div
@@ -43,6 +43,34 @@ const nodeTypes: NodeTypes = {
         boxShadow: "0 8px 20px rgba(2,6,23,0.06)",
       }}
     >
+      {/* Handles at left and right ends - small rectangles */}
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{
+          width: 10,
+          height: 6,
+          borderRadius: 2,
+          backgroundColor: "#ccc",
+          top: "50%",
+          transform: "translateY(-50%)",
+          border: `1px solid ${data.borderColor}`,
+        }}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{
+          width: 10,
+          height: 6,
+          borderRadius: 2,
+          backgroundColor: "#ccc",
+          top: "50%",
+          transform: "translateY(-50%)",
+          border: `1px solid ${data.borderColor}`,
+        }}
+      />
+
       <div className="flex items-center px-3 py-2.5">
         <div
           className="mr-2.5 grid h-7 w-7 place-items-center rounded-md flex-shrink-0"
@@ -57,27 +85,24 @@ const nodeTypes: NodeTypes = {
           <div className="mt-0.5 text-[13px] leading-tight text-gray-800">{data.subLabel}</div>
         </div>
       </div>
-      {data.description && <div className="px-3 pb-2 pt-1 text-[11px] -mt-1 text-gray-500">{data.description}</div>}
 
-      {/* Subtle handles */}
-      <Handle
-        type="source"
-        position={Position.Right}
-        className="h-2 w-2 rounded-full bg-gray-300 opacity-0 transition-opacity hover:opacity-100"
-      />
-      <Handle
-        type="target"
-        position={Position.Left}
-        className="h-2 w-2 rounded-full bg-gray-300 opacity-0 transition-opacity hover:opacity-100"
-      />
+      {/* Divider line */}
+      <div style={{ borderTop: `1px solid ${data.borderColor}`, margin: "0 12px" }} />
+
+      {data.description && <div className="px-3 pb-2 pt-1 text-[11px] -mt-1 text-gray-500">{data.description}</div>}
     </div>
   ),
 }
 
-// Layout coordinates closely mirroring the screenshot
+// Boundary constants for dragging
+const BOUNDARY_WIDTH = 900
+const BOUNDARY_HEIGHT = 440
+
 type FlowNode = Node<AutomationNodeData>
+
+// Initial nodes and edges unchanged
 const initialNodes: FlowNode[] = [
-  // Row 1
+  // Row 1 - Bot Conversation
   {
     id: "trigger-1",
     type: "automation",
@@ -87,9 +112,9 @@ const initialNodes: FlowNode[] = [
       subLabel: "Bot Conversation Start",
       description: "Conversation Completed",
       icon: FaBolt,
-      iconBgColor: "#4285F4",
-      borderColor: "#D1E0FF",
-      typeLabelColor: "#1A73E8",
+      iconBgColor: "#4285f4",
+      borderColor: "#d1e0ff",
+      typeLabelColor: "#1a73e8",
     },
   },
   {
@@ -101,9 +126,9 @@ const initialNodes: FlowNode[] = [
       subLabel: "AI Summarizer",
       description: "Summarizes Message",
       icon: FaRobot,
-      iconBgColor: "#8E24AA",
-      borderColor: "#E8D1FF",
-      typeLabelColor: "#673AB7",
+      iconBgColor: "#8e24aa",
+      borderColor: "#e8d1ff",
+      typeLabelColor: "#673ab7",
     },
   },
   {
@@ -114,13 +139,34 @@ const initialNodes: FlowNode[] = [
       typeLabel: "Action",
       subLabel: "Send WhatsApp Message",
       icon: FaWhatsapp,
-      iconBgColor: "#25D366",
-      borderColor: "#D4EDDA",
-      typeLabelColor: "#1E8449",
+      iconBgColor: "#25d366",
+      borderColor: "#d4edda",
+      typeLabelColor: "#1e8449",
     },
   },
+]
 
-  // Row 2
+const initialEdgesBot: Edge[] = [
+  {
+    id: "e1",
+    source: "trigger-1",
+    target: "ai-1",
+    type: "smoothstep",
+    style: { stroke: "#4285f4", strokeWidth: 1 },
+    markerEnd: { type: MarkerType.None },
+  },
+  {
+    id: "e2",
+    source: "ai-1",
+    target: "whatsapp-1",
+    type: "smoothstep",
+    style: { stroke: "#8e24aa", strokeWidth: 1 },
+    markerEnd: { type: MarkerType.None },
+  },
+]
+
+// Voice AI Agent nodes and edges
+const initialNodesVoice: FlowNode[] = [
   {
     id: "trigger-2",
     type: "automation",
@@ -130,9 +176,9 @@ const initialNodes: FlowNode[] = [
       subLabel: "Voice AI Agent",
       description: "Conversation Completed",
       icon: FaBolt,
-      iconBgColor: "#4285F4",
-      borderColor: "#D1E0FF",
-      typeLabelColor: "#1A73E8",
+      iconBgColor: "#4285f4",
+      borderColor: "#d1e0ff",
+      typeLabelColor: "#1a73e8",
     },
   },
   {
@@ -144,9 +190,9 @@ const initialNodes: FlowNode[] = [
       subLabel: "AI Summarizer",
       description: "Summarize Message",
       icon: FaRobot,
-      iconBgColor: "#8E24AA",
-      borderColor: "#E8D1FF",
-      typeLabelColor: "#673AB7",
+      iconBgColor: "#8e24aa",
+      borderColor: "#e8d1ff",
+      typeLabelColor: "#673ab7",
     },
   },
   {
@@ -157,9 +203,9 @@ const initialNodes: FlowNode[] = [
       typeLabel: "Action",
       subLabel: "Send SMS",
       icon: FaClipboardList,
-      iconBgColor: "#FB8C00",
-      borderColor: "#FFE0B2",
-      typeLabelColor: "#EF6C00",
+      iconBgColor: "#fb8c00",
+      borderColor: "#ffe0b2",
+      typeLabelColor: "#ef6c00",
     },
   },
   {
@@ -171,9 +217,9 @@ const initialNodes: FlowNode[] = [
       subLabel: "Wait/Delay Timer",
       description: "Wait For Two Days",
       icon: FaCogs,
-      iconBgColor: "#4CAF50",
-      borderColor: "#D4EDDA",
-      typeLabelColor: "#388E3C",
+      iconBgColor: "#4caf50",
+      borderColor: "#d4edda",
+      typeLabelColor: "#388e3c",
     },
   },
   {
@@ -184,9 +230,9 @@ const initialNodes: FlowNode[] = [
       typeLabel: "Action",
       subLabel: "Send Notification",
       icon: FaTh,
-      iconBgColor: "#4285F4",
-      borderColor: "#D1E0FF",
-      typeLabelColor: "#1A73E8",
+      iconBgColor: "#4285f4",
+      borderColor: "#d1e0ff",
+      typeLabelColor: "#1a73e8",
     },
   },
   {
@@ -197,39 +243,20 @@ const initialNodes: FlowNode[] = [
       typeLabel: "Action",
       subLabel: "Send Mail",
       icon: FaEnvelope,
-      iconBgColor: "#D32F2F",
-      borderColor: "#FFCDD2",
-      typeLabelColor: "#C62828",
+      iconBgColor: "#d32f2f",
+      borderColor: "#ffcdd2",
+      typeLabelColor: "#c62828",
     },
   },
 ]
 
-// Thinner connectors with smooth curvature, no arrows
-const LINE = 1 // thinner than before
-const initialEdges: Edge[] = [
-  {
-    id: "e1",
-    source: "trigger-1",
-    target: "ai-1",
-    type: "smoothstep",
-    style: { stroke: "#4285F4", strokeWidth: LINE },
-    markerEnd: { type: MarkerType.None },
-  },
-  {
-    id: "e2",
-    source: "ai-1",
-    target: "whatsapp-1",
-    type: "smoothstep",
-    style: { stroke: "#8E24AA", strokeWidth: LINE },
-    markerEnd: { type: MarkerType.None },
-  },
-
+const initialEdgesVoice: Edge[] = [
   {
     id: "e3",
     source: "trigger-2",
     target: "ai-2",
     type: "smoothstep",
-    style: { stroke: "#4285F4", strokeWidth: LINE },
+    style: { stroke: "#4285f4", strokeWidth: 1 },
     markerEnd: { type: MarkerType.None },
   },
   {
@@ -237,7 +264,7 @@ const initialEdges: Edge[] = [
     source: "ai-2",
     target: "action-1",
     type: "smoothstep",
-    style: { stroke: "#8E24AA", strokeWidth: LINE },
+    style: { stroke: "#8e24aa", strokeWidth: 1 },
     markerEnd: { type: MarkerType.None },
   },
   {
@@ -245,16 +272,15 @@ const initialEdges: Edge[] = [
     source: "ai-2",
     target: "logic-1",
     type: "smoothstep",
-    style: { stroke: "#8E24AA", strokeWidth: LINE },
+    style: { stroke: "#8e24aa", strokeWidth: 1 },
     markerEnd: { type: MarkerType.None },
   },
-
   {
     id: "e6",
     source: "logic-1",
     target: "notification-1",
     type: "smoothstep",
-    style: { stroke: "#4CAF50", strokeWidth: LINE },
+    style: { stroke: "#4caf50", strokeWidth: 1 },
     markerEnd: { type: MarkerType.None },
   },
   {
@@ -262,51 +288,100 @@ const initialEdges: Edge[] = [
     source: "logic-1",
     target: "mail-1",
     type: "smoothstep",
-    style: { stroke: "#4CAF50", strokeWidth: LINE },
+    style: { stroke: "#4caf50", strokeWidth: 1 },
     markerEnd: { type: MarkerType.None },
   },
 ]
 
 export default function NodeBaseAutomation() {
-  const [nodes, setNodes] = useState<Node<AutomationNodeData>[]>(initialNodes)
-  const [edges, setEdges] = useState<Edge[]>(initialEdges)
+  // State for Bot Conversation
+  const [botNodes, setBotNodes] = useState<FlowNode[]>(initialNodes)
+  const [botEdges, setBotEdges] = useState<Edge[]>(initialEdgesBot)
 
-  const onNodesChange = useCallback((changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)), [])
-  const onEdgesChange = useCallback((changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)), [])
-  const onConnect = useCallback(
-    (connection: Connection) =>
-      setEdges((eds) =>
-        addEdge(
-          { ...connection, type: "smoothstep", markerEnd: { type: MarkerType.None }, style: { strokeWidth: LINE } },
-          eds,
-        ),
-      ),
-    [],
+  // State for Voice AI Agent
+  const [voiceNodes, setVoiceNodes] = useState<FlowNode[]>(initialNodesVoice)
+  const [voiceEdges, setVoiceEdges] = useState<Edge[]>(initialEdgesVoice)
+
+  // Bound drag for Bot nodes
+  const onBotNodeDragStop = useCallback(
+    (event: React.MouseEvent, node: FlowNode) => {
+      const boundedX = Math.min(Math.max(node.position.x, 0), BOUNDARY_WIDTH)
+      const boundedY = Math.min(Math.max(node.position.y, 0), BOUNDARY_HEIGHT)
+
+      if (boundedX !== node.position.x || boundedY !== node.position.y) {
+        setBotNodes((nds) =>
+          nds.map((n) => (n.id === node.id ? { ...n, position: { x: boundedX, y: boundedY } } : n)),
+        )
+      }
+    },
+    [setBotNodes],
+  )
+
+  // Bound drag for Voice nodes
+  const onVoiceNodeDragStop = useCallback(
+    (event: React.MouseEvent, node: FlowNode) => {
+      const boundedX = Math.min(Math.max(node.position.x, 0), BOUNDARY_WIDTH)
+      const boundedY = Math.min(Math.max(node.position.y, 0), BOUNDARY_HEIGHT)
+
+      if (boundedX !== node.position.x || boundedY !== node.position.y) {
+        setVoiceNodes((nds) =>
+          nds.map((n) => (n.id === node.id ? { ...n, position: { x: boundedX, y: boundedY } } : n)),
+        )
+      }
+    },
+    [setVoiceNodes],
   )
 
   return (
-    <section className="py-8 bg-white">
-      <div className="mx-auto max-w-6xl px-4">
-        <h2 className="mb-5 text-center text-3xl md:text-4xl font-bold text-gray-800">Node Base Automation</h2>
+    <>
+      {/* Container */}
+      <div className="flex flex-col gap-6 mx-auto max-w-[900px] w-full rounded-lg">
+        <div
+          id="botflow"
+          className="bg-white rounded-lg border border-gray-300"
+          style={{ height: 220, width: 900 }}
+        >
+          <ReactFlow
+            nodes={botNodes}
+            edges={botEdges}
+            nodeTypes={nodeTypes}
+            onNodesChange={(changes: NodeChange[]) => setBotNodes((nds) => applyNodeChanges(changes, nds))}
+            onEdgesChange={(changes: EdgeChange[]) => setBotEdges((eds) => applyEdgeChanges(changes, eds))}
+            onConnect={(connection: Connection) => setBotEdges((eds) => addEdge(connection, eds))}
+            fitView
+            fitViewOptions={{ padding: 0.2 }}
+            snapToGrid
+            snapGrid={[15, 15]}
+            panOnDrag
+            onNodeDragStop={onBotNodeDragStop} // <-- Boundary applied here
+            nodesDraggable
+          />
+        </div>
 
-        {/* Smaller canvas area to match the mockup proportions */}
-        <div className="rounded-xl border border-gray-200 bg-white">
-          <div className="h-[440px] rounded-xl overflow-hidden">
-            <ReactFlow
-              nodes={nodes as Node[]}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-              nodeTypes={nodeTypes}
-              fitView
-              fitViewOptions={{ padding: 0.15, includeHiddenNodes: true }}
-              defaultViewport={{ x: 0, y: 0, zoom: 1 }}
-              proOptions={{ hideAttribution: true }}
-            />
-          </div>
+        <div
+          id="voiceflow"
+          className="bg-white rounded-lg border border-gray-300"
+          style={{ height: 440, width: 900 }}
+        >
+          <ReactFlow
+            nodes={voiceNodes}
+            edges={voiceEdges}
+            nodeTypes={nodeTypes}
+            onNodesChange={(changes: NodeChange[]) => setVoiceNodes((nds) => applyNodeChanges(changes, nds))}
+            onEdgesChange={(changes: EdgeChange[]) => setVoiceEdges((eds) => applyEdgeChanges(changes, eds))}
+            onConnect={(connection: Connection) => setVoiceEdges((eds) => addEdge(connection, eds))}
+            fitView
+            fitViewOptions={{ padding: 0.2 }}
+            snapToGrid
+            snapGrid={[15, 15]}
+            panOnDrag
+            onNodeDragStop={onVoiceNodeDragStop} // <-- Boundary applied here
+            nodesDraggable
+          />
         </div>
       </div>
-    </section>
+    </>
   )
 }
+
+

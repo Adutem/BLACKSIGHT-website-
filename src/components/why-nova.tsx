@@ -1,5 +1,5 @@
 import React from "react";
-import { FaComments, FaClock, FaPiggyBank, FaBolt } from 'react-icons/fa';
+import {  FaClock, FaPiggyBank, FaBolt, FaCalendarCheck, FaChartBar } from 'react-icons/fa';
 
 type Feature = {
   title: string;
@@ -12,19 +12,19 @@ const DEFAULT_FEATURES: Feature[] = [
     title: "60% Increase in Customer Interaction",
     description:
       "Nova responds instantly, engages intelligently, and keeps conversations going even while you sleep.",
-    icon: FaComments,
+    icon: FaClock,
   },
   {
     title: "40+ Hours Saved Monthly",
     description:
       "From automating bookings to handling common questions, Nova frees your team to focus on what truly matters.",
-    icon: FaClock,
+    icon: FaCalendarCheck,
   },
   {
     title: "40% Reduction in Support Costs",
     description:
       "Scale without scaling your team. Nova handles more requests, faster, with zero burnout.",
-    icon: FaPiggyBank,
+    icon: FaChartBar,
   },
   {
     title: "2x Boost in Team Productivity",
@@ -99,7 +99,9 @@ export default function WhyNova({
             })}
           </div>
         </div>
-
+        <br/>
+        <br/>
+        <br/>
         {/* Analytics CTA */}
         <h1 className="mx-auto max-w-4xl text-center text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 mt-8"> {/* Increased mt-6 to mt-8 (32px) */}
           <span>Our powerful analytics</span>

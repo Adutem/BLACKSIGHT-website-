@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
   const baseLink =
     "relative px-2 py-1 text-sm sm:text-base transition-colors duration-200"
   const activeLink =
-    "text-blue-600 font-semibold after:absolute after:left-1/2 after:-translate-x-1/2 after:-bottom-1 after:h-[2px] after:w-6 after:rounded-full after:bg-blue-600"
+    "text-blue-500 font-semibold after:absolute after:left-1/2 after:-translate-x-1/2 after:-bottom-1 after:h-[2px] after:w-6 after:rounded-full after:bg-blue-600"
   const inactiveLink = "text-gray-700 hover:text-black-900 fontt-semibold"
 
   return (
@@ -30,9 +30,9 @@ export const Header: React.FC = () => {
         {/* Brand */}
         <Link to="/" className="flex items-center gap-2">
           <img
-            src="/assets/blacksight-logo.svg"
+            src="./assets\BlackSight.png"
             alt="Blacksight Logo"
-            className="h-7 w-auto sm:h-8"
+            className="h-32 w-auto sm:h-8"
           />
           <span className="text-lg sm:text-xl font-bold text-blue-400">
             Blacksight
@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
 
         {/* Actions (always visible) */}
         <div className="hidden sm:flex items-center gap-2">
-          <Link to="/signin">
+          <Link to="https://app.blacksight.co/user/signin">
             <button className="rounded-lg bg-blue-400 px-4 py-2 text-sm sm:text-base font-medium text-white shadow-md transition hover:bg--500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
               Sign In
             </button>

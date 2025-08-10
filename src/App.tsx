@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import  {Header}  from "./components/Header";
 import  HeroSection  from "./components/HeroSection";
-import PhoneMockup from "./components/phone-mockup";
 import LeadForm from "./components/LeadForm";
 import { JourneySteps } from "./components/JourneySteps";
 import { JourneyStepCarousel } from "./components/JourneyStepCarousel";
@@ -17,7 +16,6 @@ import { Contact } from "./pages/Contact";
 import { Terms } from "./pages/Terms";
 import FormDemo from "./pages/FormDemo";
 import WhyNovaDemo from "./pages/why-nova-demo";
-import  AnalyticsCtaDemo  from "./pages/analytics-cta-demo";
 import  FaqDemo  from "./pages/carousel-demo"; // Importing the carousel demo
 import JoinCommunitiesDemo from "./pages/join-communities-demo"; // Importing the join communities demo
 import { PhoneFormMockup } from "./components/PhoneFormMockUp";
@@ -42,15 +40,14 @@ const App: React.FC = () => {
       <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 max-w-2xl text-gray-800">
         Your Next Business Breakthrough Could Be a Call Away — Meet Nova
       </h2>
-                <PhoneFormMockup frameSrc="./assets/phonemockup.svg" screenRect={{ topPct: 8.5, leftPct: 6, widthPct: 88, heightPct: 83 }} />
+                <PhoneFormMockup frameSrc="./assets/phonemockup.svg" screenRect={{ topPct: 9, leftPct: 8, widthPct: 92, heightPct: 83 }} />
     </section>
                 <JourneySteps />
                 <JourneyStepCarousel />
-                <NodeBaseAutomation /> {/* Corrected component name */}
+                <NodeBaseAutomation /> 
                 <AiAssistantSteps />
                 <AiVoiceHero />
                 <WhyNovaDemo />
-
                 <FaqDemo />
                 <JoinCommunitiesDemo />
 

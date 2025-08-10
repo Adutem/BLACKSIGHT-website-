@@ -1,19 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { UserPlus, BookMarked, Bot, Plug, Boxes, type LucideIcon } from 'lucide-react';
 
-/**
- * AiAssistantSteps
- * - Plain React + Tailwind component (no Next.js APIs).
- * - Alternating two-column timeline with curved SVG connectors.
- * - Scroll animations: cards slide in from alternating sides; connectors follow.
- *
- * Usage:
- *   <AiAssistantSteps />
- *
- * Tailwind: ensure Tailwind is configured in your React app.
- * Icons:    npm i lucide-react
- */
-
 type Step = {
   title: string
   description: string
@@ -60,8 +47,7 @@ const DEFAULT_STEPS: Step[] = [
   },
 ]
 
-// Observe visibility per element to drive enter/leave animations
-function useVisibility(count: number, threshold = 0.25) {
+function useVisibility(count: number, threshold = 0.3) {
   const refs = useRef<(HTMLDivElement | null)[]>([])
   const [visible, setVisible] = useState<boolean[]>(Array(count).fill(false))
 
@@ -77,14 +63,16 @@ function useVisibility(count: number, threshold = 0.25) {
             const idxAttr = entry.target.getAttribute("data-index")
             if (idxAttr) {
               const idx = Number(idxAttr)
-              // Toggle on intersection so cards animate in and out while scrolling
-              next[idx] = entry.isIntersecting
+              // Only set true when intersecting; do not reset false to avoid flicker
+              if (entry.isIntersecting) {
+                next[idx] = true
+              }
             }
           }
           return next
         })
       },
-      { threshold, rootMargin: "0px 0px -10% 0px" }
+      { threshold, rootMargin: "0px 0px -20% 0px" } // slightly bigger rootMargin to trigger earlier
     )
 
     elements.forEach((el) => observer.observe(el))
@@ -97,15 +85,14 @@ function useVisibility(count: number, threshold = 0.25) {
 type Connector = {
   fromIdx: number
   toIdx: number
-  d: string // SVG path data
+  d: string
   animateWithIndex: number
 }
 
 export default function AiAssistantSteps({
   steps = DEFAULT_STEPS,
   title = "How to use AI Assistant",
-  // Adjust how much lower the right column sits (to “touch” arrows nicely)
-  rightColumnOffset = 64, // px on md+ screens
+  rightColumnOffset = 64, // px vertical offset for right column cards
 }: {
   steps?: Step[]
   title?: string
@@ -117,7 +104,6 @@ export default function AiAssistantSteps({
   const [rects, setRects] = useState<DOMRect[]>([])
   const [containerRect, setContainerRect] = useState<DOMRect | null>(null)
 
-  // Measure card and container rects to build connectors
   useLayoutEffect(() => {
     const measure = () => {
       const container = containerRef.current
@@ -127,14 +113,11 @@ export default function AiAssistantSteps({
       setRects(rs)
     }
 
-    // Initial + on next paint for accuracy
     requestAnimationFrame(measure)
 
-    // Resize handling
     const onResize = () => requestAnimationFrame(measure)
     window.addEventListener("resize", onResize)
 
-    // Observe container if available
     const RO = (window as any).ResizeObserver
     const ro = RO ? new RO(onResize) : null
     if (ro && containerRef.current) ro.observe(containerRef.current)
@@ -145,7 +128,6 @@ export default function AiAssistantSteps({
     }
   }, [steps.length])
 
-  // Build curved connectors from each card to the next
   const connectors: Connector[] = useMemo(() => {
     if (!containerRect || rects.length < 2) return []
 
@@ -155,13 +137,13 @@ export default function AiAssistantSteps({
       const to = rects[i + 1]
       if (!from?.width || !to?.width) continue
 
-      const isFromLeft = i % 2 === 0 // even indexes on left
+      const isFromLeft = i % 2 === 0
       const fromX = isFromLeft ? from.right - containerRect.left : from.left - containerRect.left
       const toX = isFromLeft ? to.left - containerRect.left : to.right - containerRect.left
 
-      // Anchor lower on the "from" card and upper on the "to" card
-      const FROM_ANCHOR = 0.66 // ~2/3 down from top
-      const TO_ANCHOR = 0.30   // ~1/3 down from top
+      // Adjust anchors slightly for better curve alignment (tweak if needed)
+      const FROM_ANCHOR = 0.7
+      const TO_ANCHOR = 0.3
 
       const fromY = from.top - containerRect.top + from.height * FROM_ANCHOR
       const toY = to.top - containerRect.top + to.height * TO_ANCHOR
@@ -169,7 +151,6 @@ export default function AiAssistantSteps({
       const dx = Math.abs(toX - fromX)
       const dy = Math.abs(toY - fromY)
 
-      // Smooth curve amounts
       const bendX = Math.max(70, dx * 0.45)
       const bendY = Math.max(50, dy * 0.65)
 
@@ -202,7 +183,7 @@ export default function AiAssistantSteps({
           className="relative mt-10 sm:mt-12"
           aria-label="AI Assistant setup steps"
         >
-          {/* Curved connectors (md+) */}
+          {/* Connectors */}
           <svg
             className="pointer-events-none absolute inset-0 hidden md:block"
             width="100%"
@@ -212,7 +193,7 @@ export default function AiAssistantSteps({
           >
             <defs>
               <marker id="arrow-gray-200" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto">
-                <path d="M0,0 L0,14 L14,7 z" fill="#e5e7eb"></path>
+                <path d="M0,0 L0,14 L14,7 z" fill="#e5e7eb" />
               </marker>
             </defs>
             {connectors.map((c, idx) => {
@@ -232,7 +213,7 @@ export default function AiAssistantSteps({
                   <path
                     d={c.d}
                     fill="none"
-                    stroke="#e5e7eb" // gray-200 to match subtle arrows
+                    stroke="#e5e7eb"
                     strokeWidth={2}
                     markerEnd="url(#arrow-gray-200)"
                   />
@@ -242,19 +223,20 @@ export default function AiAssistantSteps({
           </svg>
 
           {/* Cards grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-20"> {/* increased gap-y to 20 (5rem) */}
             {steps.map((step, i) => {
               const isLeft = i % 2 === 0
               const initialShift = isLeft ? "-translate-x-16" : "translate-x-16"
               const alignClass = isLeft ? "md:justify-self-start" : "md:justify-self-end"
-              // Lower the right column slightly to emulate the design (touching arrows)
-              const verticalOffsetClass = !isLeft ? `md:mt-[${rightColumnOffset}px]` : ""
+              // Use inline style to apply vertical offset for right column cards
+              const verticalOffset = !isLeft ? rightColumnOffset : 0
               return (
                 <div
                   key={i}
                   ref={(el) => (cardRefs.current[i] = el)}
                   data-index={i}
-                  className={["relative", "flex", alignClass, verticalOffsetClass].join(" ")}
+                  className={["relative", "flex", alignClass].join(" ")}
+                  style={{ marginTop: verticalOffset }} // this fixes dynamic margin issue
                 >
                   <div
                     className={[
@@ -272,39 +254,11 @@ export default function AiAssistantSteps({
                       <div className={`shrink-0 ${step.iconBg} rounded-xl p-2.5`}>
                         <step.Icon className={`h-6 w-6 ${step.iconFg}`} aria-hidden="true" />
                       </div>
-                      <div className="min-w-0">
-                        <h3 className="text-xl sm:text-2xl font-semibold text-zinc-900">
-                          {step.title}
-                        </h3>
-                        <p className="mt-2 text-sm sm:text-[15px] text-zinc-600">
-                          {step.description}
-                        </p>
+                      <div className="flex flex-col gap-1.5">
+                        <h3 className="text-lg font-semibold leading-6 text-zinc-900">{step.title}</h3>
+                        <p className="text-sm leading-6 text-zinc-600">{step.description}</p>
                       </div>
                     </div>
-
-                    {/* Decorative small down arrow near the connector drop */}
-                    {i < steps.length - 1 && (
-                      <div
-                        className={[
-                          "hidden md:block absolute",
-                          isLeft ? "right-6" : "left-6",
-                          "bottom-[-26px]",
-                          "opacity-60 transition-opacity duration-700",
-                          visible[i] ? "opacity-60" : "opacity-0",
-                        ].join(" ")}
-                        aria-hidden="true"
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                          <path
-                            d="M12 5v14m0 0l-5-5m5 5l5-5"
-                            stroke="#e5e7eb"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </div>
-                    )}
                   </div>
                 </div>
               )
@@ -315,3 +269,5 @@ export default function AiAssistantSteps({
     </section>
   )
 }
+
+

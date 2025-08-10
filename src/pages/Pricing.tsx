@@ -30,7 +30,7 @@ export const Pricing: React.FC = () => {
             className={`w-full sm:w-auto border px-4 py-3 rounded-full transition-colors duration-300 ${
               selectedPlan === "ascend"
                 ? "bg-blue-500 border-blue-500 text-white shadow-lg"
-                : "border-gray-600 hover:bg-gray-800"
+                : "border-blue-500 hover:bg-white-400 text-blue-500"
             }`}
             onClick={() => setSelectedPlan("ascend")}
           >
@@ -40,7 +40,7 @@ export const Pricing: React.FC = () => {
             className={`w-full sm:w-auto border px-4 py-3 rounded-full transition-colors duration-300 ${
               selectedPlan === "pinnacle"
                 ? "bg-blue-500 border-blue-500 text-white shadow-lg"
-                : "border-gray-600 hover:bg-gray-800"
+                : "border-blue-500 hover:bg-white-400 text-blue-500"
             }`}
             onClick={() => setSelectedPlan("pinnacle")}
           >
@@ -62,11 +62,12 @@ export const Pricing: React.FC = () => {
           )}
           {selectedPlan === "ascend" && (
             <iframe 
-       src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTo1MTNKNHdH"
+       src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTplUURuUXd4"
         width="100%"
         height="800"
         frameBorder="0"
         style={{border: "none"}}
+        title="Ascend Pricing"
 ></iframe>
           )}
           {selectedPlan === "pinnacle" && (

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 // Add your image paths here
 const images = [
-  "/assets/journey-main.png", 
-  "/assets/journey2.png",
-  "/assets/journey3.png",
-  "/assets/journey4.png",
+  "./assets/keyfeatures.png",
+"./assets/keyfeatures1.png",
+  "./assets/keyfeatures2.png",
+  
 ];
 
 // Initial text content for each image with lists

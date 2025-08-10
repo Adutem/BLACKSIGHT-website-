@@ -113,7 +113,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <motion.div 
-      className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 flex flex-col h-full w-full max-w-lg mx-auto"
+      className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 flex flex-col h-10 w-10 max-w-lg mx-auto"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
