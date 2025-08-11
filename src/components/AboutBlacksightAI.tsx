@@ -1,6 +1,6 @@
 export const AboutBlacksightAI: React.FC = () => (
   <div className="max-w-4xl mx-auto px-4">
-    <div className="border-2 border-dotted border-gray-300 rounded-xl p-8 bg-white">
+    <div className="border-2 border-dotted border-gray-300 rounded-xl p-12 sm:p-16 bg-[rgba(59,130,246,0.03)]">
       <div className="text-center">
         <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4">
           About Blacksight AI

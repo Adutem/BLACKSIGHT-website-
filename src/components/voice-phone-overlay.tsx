@@ -2,45 +2,19 @@ import React from "react"
 import { Battery, PhoneCall, PhoneOff, Signal, Wifi } from 'lucide-react'
 
 type VoicePhoneOverlayProps = {
-  // Your phone svg/image path or URL
   src: string
   alt?: string
   className?: string
-  // Top status icons row offset from the top of the image (in px)
   statusOffset?: number
-  // Bottom call buttons offset from the bottom of the image (in px)
   buttonsOffset?: number
-  // Size of the round call action buttons
   buttonSize?: number
-  // Icon sizes (in px)
   iconSize?: number
-  // Click handlers
   onAccept?: () => void
   onDecline?: () => void
-  // Optional content centered on the screen area (e.g., "NOVA AI" / "Connecting…")
   children?: React.ReactNode
-  // If your phone SVG has a dark screen, flip status icon color to white
   statusOnDark?: boolean
 }
 
-/**
- * VoicePhoneOverlay
- * - Renders your phone SVG and overlays status icons (Signal/Wifi/Battery) at the top
- *   and Accept/Decline call buttons at the bottom.
- * - Positions are adjustable via props to fit your specific SVG.
- *
- * Usage:
- *  <VoicePhoneOverlay
- *    src="/images/phone.svg"
- *    onAccept={() => console.log('accept')}
- *    onDecline={() => console.log('decline')}
- *  >
- *    <div className="text-center">
- *      <h4 className="text-2xl font-extrabold text-black">NOVA AI</h4>
- *      <p className="text-gray-600">Connecting …</p>
- *    </div>
- *  </VoicePhoneOverlay>
- */
 export default function VoicePhoneOverlay({
   src,
   alt = "Phone",
@@ -56,9 +30,15 @@ export default function VoicePhoneOverlay({
 }: VoicePhoneOverlayProps) {
   const statusColor = statusOnDark ? "text-white/90" : "text-black/80"
 
+  const handleAccept = () => {
+    // Trigger custom accept behavior if provided
+    if (onAccept) onAccept()
+    // Initiate phone call
+    window.location.href = "tel:+14049752632"
+  }
+
   return (
     <div className={`relative inline-block ${className}`}>
-      {/* Your phone SVG/Image */}
       <img
         src={src || "/assets/phone.svg"}
         alt={alt}
@@ -66,30 +46,19 @@ export default function VoicePhoneOverlay({
         draggable={false}
       />
 
-      {/* Dotted screen overlay */}
-      <div className="absolute pointer-events-none" style={{ top: 0, left: 0, right: 0, bottom: 0 }}>
-        {/* Your dotted screen overlay code here */}
+      {/* Top left time */}
+      <div className="absolute left-0" style={{ top: statusOffset }} aria-hidden="true">
+        <div className="ml-4 text-[12px] font-medium text-black/80">12:00</div>
       </div>
 
-      {/* Time (top-left) to match reference */}
-      <div
-        className="absolute left-0"
-        style={{ top: statusOffset }}
-        aria-hidden="true"
-      >
-        <div className="ml-4 text-[12px] font-medium text-black/80">
-          12:00
-        </div>
-      </div>
-
-      {/* Center content (optional) */}
+      {/* Center content */}
       {children && (
         <div className="pointer-events-none absolute left-0 right-0 top-1/2 -translate-y-1/2 px-6">
           <div className="flex w-full items-center justify-center">{children}</div>
         </div>
       )}
 
-      {/* Status icons (top-right) */}
+      {/* Status icons */}
       <div
         className={`absolute left-0 right-0 ${statusColor}`}
         style={{ top: statusOffset }}
@@ -102,17 +71,14 @@ export default function VoicePhoneOverlay({
         </div>
       </div>
 
-      {/* Bottom call action buttons */}
-      <div
-        className="absolute left-0 right-0"
-        style={{ bottom: buttonsOffset }}
-      >
+      {/* Bottom call buttons */}
+      <div className="absolute left-0 right-0" style={{ bottom: buttonsOffset }}>
         <div className="flex items-center justify-center gap-12">
           {/* Accept */}
           <div className="flex flex-col items-center gap-1">
             <button
               type="button"
-              onClick={onAccept}
+              onClick={handleAccept}
               className="grid place-items-center rounded-full bg-green-500 text-white shadow hover:bg-green-600 active:bg-green-600 transition-colors"
               style={{ width: buttonSize, height: buttonSize }}
               aria-label="Accept"

@@ -2,7 +2,10 @@ import React from "react";
 import { FaBullseye, FaVrCardboard } from "react-icons/fa";
 
 export const OurMission: React.FC = () => (
-  <section className="max-w-4xl mx-auto text-center mb-8 sm:mb-16 px-2 sm:px-0">
+  <section
+    className="max-w-4xl mx-auto text-center mb-8 sm:mb-16 px-2 sm:px-0 bg-white"
+    style={{ boxShadow: "none" }} // Force remove any shadow
+  >
     <h2 className="text-3xl sm:text-4xl font-bold text-black mb-4 sm:mb-8 flex items-center justify-center">
       <FaBullseye className="text-2xl sm:text-3xl mr-2 sm:mr-4 text-black" /> Our Mission
     </h2>

@@ -19,7 +19,10 @@ const LinkList: React.FC<LinkListProps> = ({ title, links }) => (
       {links.map((link) => (
         <li key={link.label} className="flex items-center">
           <span className="text-xs mr-2 text-gray-600">✓</span>
-          <a href={link.href} className="text-gray-700 hover:text-blue-500 transition-colors">
+          <a
+            href={link.href}
+            className="text-gray-700 hover:text-blue-500 transition-colors"
+          >
             {link.label}
           </a>
         </li>
@@ -64,7 +67,6 @@ export const Footer: React.FC = () => {
           {/* Left Side - Brand Identity */}
           <div className="mb-6 lg:mb-0">
             <div className="flex items-center mb-2">
-              {/* Blue logo - abstract eye/target design */}
               <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
                 <div className="w-6 h-6 border-2 border-white rounded-full"></div>
               </div>
@@ -81,25 +83,18 @@ export const Footer: React.FC = () => {
 
           {/* Right Side - Social Media */}
           <div className="flex flex-col items-start">
-            <div className="flex space-x-3 mb-2">
-              {socialLinks.map(({ href, Icon }) => (
-                <a 
-                  key={href} 
-                  href={href} 
-                  className="text-blue-500 hover:text-blue-600 transition-colors"
+            {/* Icons above text */}
+            <div className="flex gap-6 text-center">
+              {socialLinks.map(({ href, label, Icon }) => (
+                <a
+                  key={href}
+                  href={href}
+                  className="flex flex-col items-center text-blue-500 hover:text-blue-600 transition-colors"
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-6 w-6 mb-1" />
+                  <span className="text-sm text-gray-700">{label}</span>
                 </a>
               ))}
-            </div>
-            <div className="text-sm text-gray-600">
-              <span>Instagram</span>
-              <span className="mx-2">|</span>
-              <span>LinkedIn</span>
-              <span className="mx-2">|</span>
-              <span>Facebook</span>
-              <span className="mx-2">|</span>
-              <span>X</span>
             </div>
           </div>
         </div>

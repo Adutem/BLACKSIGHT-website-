@@ -1,7 +1,6 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useCallback, useState } from "react"
+import React, { useCallback, useState } from "react";
 import ReactFlow, {
   applyNodeChanges,
   applyEdgeChanges,
@@ -15,27 +14,33 @@ import ReactFlow, {
   Handle,
   Position,
   MarkerType,
-} from "reactflow"
-import "reactflow/dist/style.css"
+} from "reactflow";
+import "reactflow/dist/style.css";
 
-// Icons
-import { FaBolt, FaRobot, FaWhatsapp, FaClipboardList, FaCogs, FaTh, FaEnvelope } from "react-icons/fa"
+import {
+  FaBolt,
+  FaRobot,
+  FaWhatsapp,
+  FaClipboardList,
+  FaCogs,
+  FaTh,
+  FaEnvelope,
+} from "react-icons/fa";
 
 interface AutomationNodeData {
-  typeLabel: string
-  subLabel: string
-  description?: string
-  icon: React.ComponentType<{ className?: string }>
-  iconBgColor: string
-  borderColor: string
-  typeLabelColor: string
+  typeLabel: string;
+  subLabel: string;
+  description?: string;
+  icon: React.ComponentType<{ className?: string }>;
+  iconBgColor: string;
+  borderColor: string;
+  typeLabelColor: string;
 }
 
-// Compact, clean node style to match the mockup, with divider and magnet handles
 const nodeTypes: NodeTypes = {
   automation: ({ data }: { data: AutomationNodeData }) => (
     <div
-      className="rounded-xl border flex flex-col overflow-hidden"
+      className="rounded-xl border flex flex-col overflow-hidden bg-white"
       style={{
         borderColor: data.borderColor,
         minWidth: 220,
@@ -43,7 +48,6 @@ const nodeTypes: NodeTypes = {
         boxShadow: "0 8px 20px rgba(2,6,23,0.06)",
       }}
     >
-      {/* Handles at left and right ends - small rectangles */}
       <Handle
         type="target"
         position={Position.Left}
@@ -79,30 +83,40 @@ const nodeTypes: NodeTypes = {
           <data.icon className="text-white text-[12px]" />
         </div>
         <div className="flex min-w-0 flex-col">
-          <div className="text-[13px] font-semibold" style={{ color: data.typeLabelColor }}>
+          <div
+            className="text-[13px] font-semibold"
+            style={{ color: data.typeLabelColor }}
+          >
             {data.typeLabel}
           </div>
-          <div className="mt-0.5 text-[13px] leading-tight text-gray-800">{data.subLabel}</div>
+          <div className="mt-0.5 text-[13px] leading-tight text-gray-800">
+            {data.subLabel}
+          </div>
         </div>
       </div>
 
-      {/* Divider line */}
       <div style={{ borderTop: `1px solid ${data.borderColor}`, margin: "0 12px" }} />
 
-      {data.description && <div className="px-3 pb-2 pt-1 text-[11px] -mt-1 text-gray-500">{data.description}</div>}
+      {data.description && (
+        <div className="px-3 pb-2 pt-1 text-[11px] -mt-1 text-gray-500">
+          {data.description}
+        </div>
+      )}
     </div>
   ),
-}
+};
 
-// Boundary constants for dragging
-const BOUNDARY_WIDTH = 900
-const BOUNDARY_HEIGHT = 440
+const BOUNDARY_WIDTH = 900;
+const BOUNDARY_HEIGHT = 440;
 
-type FlowNode = Node<AutomationNodeData>
+type FlowNode = Node<AutomationNodeData>;
 
-// Initial nodes and edges unchanged
+/* -------------------------
+   Initial nodes & edges
+   ------------------------- */
+
+// Bot Conversation
 const initialNodes: FlowNode[] = [
-  // Row 1 - Bot Conversation
   {
     id: "trigger-1",
     type: "automation",
@@ -144,7 +158,7 @@ const initialNodes: FlowNode[] = [
       typeLabelColor: "#1e8449",
     },
   },
-]
+];
 
 const initialEdgesBot: Edge[] = [
   {
@@ -163,9 +177,9 @@ const initialEdgesBot: Edge[] = [
     style: { stroke: "#8e24aa", strokeWidth: 1 },
     markerEnd: { type: MarkerType.None },
   },
-]
+];
 
-// Voice AI Agent nodes and edges
+// Voice AI Agent
 const initialNodesVoice: FlowNode[] = [
   {
     id: "trigger-2",
@@ -248,7 +262,7 @@ const initialNodesVoice: FlowNode[] = [
       typeLabelColor: "#c62828",
     },
   },
-]
+];
 
 const initialEdgesVoice: Edge[] = [
   {
@@ -291,97 +305,116 @@ const initialEdgesVoice: Edge[] = [
     style: { stroke: "#4caf50", strokeWidth: 1 },
     markerEnd: { type: MarkerType.None },
   },
-]
+];
+
+/* -------------------------
+   Component
+   ------------------------- */
 
 export default function NodeBaseAutomation() {
-  // State for Bot Conversation
-  const [botNodes, setBotNodes] = useState<FlowNode[]>(initialNodes)
-  const [botEdges, setBotEdges] = useState<Edge[]>(initialEdgesBot)
+  const [botNodes, setBotNodes] = useState<FlowNode[]>(initialNodes);
+  const [botEdges, setBotEdges] = useState<Edge[]>(initialEdgesBot);
+  const [voiceNodes, setVoiceNodes] = useState<FlowNode[]>(initialNodesVoice);
+  const [voiceEdges, setVoiceEdges] = useState<Edge[]>(initialEdgesVoice);
 
-  // State for Voice AI Agent
-  const [voiceNodes, setVoiceNodes] = useState<FlowNode[]>(initialNodesVoice)
-  const [voiceEdges, setVoiceEdges] = useState<Edge[]>(initialEdgesVoice)
+  // clamp function factory
+  const handleNodesChange = useCallback(
+    (setNodesFn: React.Dispatch<React.SetStateAction<FlowNode[]>>) => {
+      return (changes: NodeChange[]) => {
+        setNodesFn((nds) =>
+          applyNodeChanges(
+            changes.map((change) => {
+              if (change.type === "position" && change.position) {
+                const node = nds.find((n) => n.id === change.id) as FlowNode | undefined;
+                if (node) {
+                  // measured width/height fallback
+                  const nodeWidth = typeof node.width === "number" ? node.width : 220;
+                  const nodeHeight = typeof node.height === "number" ? node.height : 100;
 
-  // Bound drag for Bot nodes
-  const onBotNodeDragStop = useCallback(
-    (event: React.MouseEvent, node: FlowNode) => {
-      const boundedX = Math.min(Math.max(node.position.x, 0), BOUNDARY_WIDTH)
-      const boundedY = Math.min(Math.max(node.position.y, 0), BOUNDARY_HEIGHT)
+                  const minX = 0;
+                  const minY = 0;
+                  const maxX = Math.max(0, BOUNDARY_WIDTH - nodeWidth);
+                  const maxY = Math.max(0, BOUNDARY_HEIGHT - nodeHeight);
 
-      if (boundedX !== node.position.x || boundedY !== node.position.y) {
-        setBotNodes((nds) =>
-          nds.map((n) => (n.id === node.id ? { ...n, position: { x: boundedX, y: boundedY } } : n)),
-        )
-      }
+                  return {
+                    ...change,
+                    position: {
+                      x: Math.min(Math.max(change.position.x, minX), maxX),
+                      y: Math.min(Math.max(change.position.y, minY), maxY),
+                    },
+                  };
+                }
+              }
+              return change;
+            }),
+            nds
+          )
+        );
+      };
     },
-    [setBotNodes],
-  )
-
-  // Bound drag for Voice nodes
-  const onVoiceNodeDragStop = useCallback(
-    (event: React.MouseEvent, node: FlowNode) => {
-      const boundedX = Math.min(Math.max(node.position.x, 0), BOUNDARY_WIDTH)
-      const boundedY = Math.min(Math.max(node.position.y, 0), BOUNDARY_HEIGHT)
-
-      if (boundedX !== node.position.x || boundedY !== node.position.y) {
-        setVoiceNodes((nds) =>
-          nds.map((n) => (n.id === node.id ? { ...n, position: { x: boundedX, y: boundedY } } : n)),
-        )
-      }
-    },
-    [setVoiceNodes],
-  )
+    []
+  );
 
   return (
-    <>
-      {/* Container */}
-      <div className="flex flex-col gap-6 mx-auto max-w-[900px] w-full rounded-lg">
-        <div
-          id="botflow"
-          className="bg-white rounded-lg border border-gray-300"
-          style={{ height: 220, width: 900 }}
-        >
-          <ReactFlow
-            nodes={botNodes}
-            edges={botEdges}
-            nodeTypes={nodeTypes}
-            onNodesChange={(changes: NodeChange[]) => setBotNodes((nds) => applyNodeChanges(changes, nds))}
-            onEdgesChange={(changes: EdgeChange[]) => setBotEdges((eds) => applyEdgeChanges(changes, eds))}
-            onConnect={(connection: Connection) => setBotEdges((eds) => addEdge(connection, eds))}
-            fitView
-            fitViewOptions={{ padding: 0.2 }}
-            snapToGrid
-            snapGrid={[15, 15]}
-            panOnDrag
-            onNodeDragStop={onBotNodeDragStop} // <-- Boundary applied here
-            nodesDraggable
-          />
-        </div>
-
-        <div
-          id="voiceflow"
-          className="bg-white rounded-lg border border-gray-300"
-          style={{ height: 440, width: 900 }}
-        >
-          <ReactFlow
-            nodes={voiceNodes}
-            edges={voiceEdges}
-            nodeTypes={nodeTypes}
-            onNodesChange={(changes: NodeChange[]) => setVoiceNodes((nds) => applyNodeChanges(changes, nds))}
-            onEdgesChange={(changes: EdgeChange[]) => setVoiceEdges((eds) => applyEdgeChanges(changes, eds))}
-            onConnect={(connection: Connection) => setVoiceEdges((eds) => addEdge(connection, eds))}
-            fitView
-            fitViewOptions={{ padding: 0.2 }}
-            snapToGrid
-            snapGrid={[15, 15]}
-            panOnDrag
-            onNodeDragStop={onVoiceNodeDragStop} // <-- Boundary applied here
-            nodesDraggable
-          />
+    <div className="flex flex-col gap-6 mx-auto max-w-[900px] w-full rounded-lg">
+      {/* Bot Flow (keeps default look; no dashed border) */}
+      <div
+        id="botflow"
+        className="relative bg-white rounded-lg border border-gray-200"
+        style={{ height: 220, width: BOUNDARY_WIDTH }}
+      >
+        <ReactFlow
+          nodes={botNodes}
+          edges={botEdges}
+          nodeTypes={nodeTypes}
+          onNodesChange={handleNodesChange(setBotNodes)}
+          onEdgesChange={(changes: EdgeChange[]) =>
+            setBotEdges((eds) => applyEdgeChanges(changes, eds))
+          }
+          onConnect={(connection: Connection) =>
+            setBotEdges((eds) => addEdge(connection, eds))
+          }
+          fitView
+          snapToGrid
+          snapGrid={[15, 15]}
+          translateExtent={[[0, 0], [BOUNDARY_WIDTH, BOUNDARY_HEIGHT]]}
+          nodesDraggable
+          proOptions={{ hideAttribution: true }} // remove built-in React Flow attribution
+        />
+        {/* custom small attribution label */}
+        <div className="absolute bottom-2 right-3 text-xs text-gray-500 select-none">
+          Blacksight
         </div>
       </div>
-    </>
-  )
+
+      {/* Voice Flow */}
+      <div
+        id="voiceflow"
+        className="relative bg-white rounded-lg border border-gray-200"
+        style={{ height: BOUNDARY_HEIGHT, width: BOUNDARY_WIDTH }}
+      >
+        <ReactFlow
+          nodes={voiceNodes}
+          edges={voiceEdges}
+          nodeTypes={nodeTypes}
+          onNodesChange={handleNodesChange(setVoiceNodes)}
+          onEdgesChange={(changes: EdgeChange[]) =>
+            setVoiceEdges((eds) => applyEdgeChanges(changes, eds))
+          }
+          onConnect={(connection: Connection) =>
+            setVoiceEdges((eds) => addEdge(connection, eds))
+          }
+          fitView
+          snapToGrid
+          snapGrid={[15, 15]}
+          translateExtent={[[0, 0], [BOUNDARY_WIDTH, BOUNDARY_HEIGHT]]}
+          nodesDraggable
+          proOptions={{ hideAttribution: true }}
+        />
+        <div className="absolute bottom-2 right-3 text-xs text-gray-500 select-none">
+          Blacksight
+        </div>
+      </div>
+    </div>
+  );
 }
-
-

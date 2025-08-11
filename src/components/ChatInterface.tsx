@@ -18,34 +18,57 @@ export default function ChatInterface({ initialMessages = [] }: ChatInterfacePro
   const chatContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Scroll to bottom on message change
     chatContainerRef.current?.scrollTo({
       top: chatContainerRef.current.scrollHeight,
       behavior: 'smooth'
     })
   }, [messages])
 
-  const handleSendMessage = () => {
-    if (newMessage.trim() !== "") {
-      const userMessage: Message = {
-        id: String(Date.now()),
-        text: newMessage,
-        sender: "user",
+  const handleSendMessage = async () => {
+    if (newMessage.trim() === "") return
+
+    const userMessage: Message = {
+      id: String(Date.now()),
+      text: newMessage,
+      sender: "user",
+      timestamp: new Date(),
+    }
+
+    setMessages(prev => [...prev, userMessage])
+    setNewMessage("")
+
+    try {
+      // Example: Using Ollama's REST API (adjust URL/model as needed)
+      const res = await fetch("http://localhost:11434/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "mistral", // or "llama2", "gemma", etc.
+          prompt: newMessage,
+          stream: false
+        })
+      })
+
+      const data = await res.json()
+
+      const assistantMessage: Message = {
+        id: String(Date.now() + 1),
+        text: data.response || "No response from AI.",
+        sender: "assistant",
         timestamp: new Date(),
       }
-      setMessages([...messages, userMessage])
-      setNewMessage("")
 
-      // Simulate assistant reply (replace with actual AI logic)
-      setTimeout(() => {
-        const assistantMessage: Message = {
-          id: String(Date.now() + 1),
-          text: "This is an automated response. Thank you for your message!",
-          sender: "assistant",
-          timestamp: new Date(),
-        }
-        setMessages((prevMessages) => [...prevMessages, assistantMessage])
-      }, 1000)
+      setMessages(prev => [...prev, assistantMessage])
+
+    } catch (error) {
+      console.error("Error fetching AI response:", error)
+      const errorMessage: Message = {
+        id: String(Date.now() + 2),
+        text: "⚠️ Error: Unable to connect to AI server.",
+        sender: "assistant",
+        timestamp: new Date(),
+      }
+      setMessages(prev => [...prev, errorMessage])
     }
   }
 
