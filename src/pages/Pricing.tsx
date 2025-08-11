@@ -5,6 +5,9 @@ import React, { useState } from "react";
 export const Pricing: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<"solo" | "ascend" | "pinnacle">("solo");
 
+  const buttonBaseClasses =
+    "w-full sm:w-auto border px-6 py-2 transition-colors duration-300";
+
   return (
     <main className="min-h-screen flex flex-col font-sans">
       {/* Top Section - Black */}
@@ -16,33 +19,33 @@ export const Pricing: React.FC = () => {
           Because you deserve tools that save time, boost results, and grow with you.
         </p>
 
-        {/* Responsive button group */}
+        {/* Button group */}
         <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:gap-4 mb-8 w-full max-w-sm sm:max-w-none">
           <button
-            className={`w-full sm:w-auto border px-6 py-2 transition-colors duration-300 ${
+            className={`${buttonBaseClasses} ${
               selectedPlan === "solo"
-                ? "bg-black border-white text-white shadow-lg"
-                : "border-white hover:bg-white hover:text-black"
+                ? "bg-white text-black border-white"
+                : "bg-transparent border-white text-white hover:bg-white hover:text-black"
             }`}
             onClick={() => setSelectedPlan("solo")}
           >
             Solo Suite
           </button>
           <button
-            className={`w-full sm:w-auto border px-6 py-2 transition-colors duration-300 ${
+            className={`${buttonBaseClasses} ${
               selectedPlan === "ascend"
-                ? "bg-black border-white text-white shadow-lg"
-                : "border-white hover:bg-white hover:text-black"
+                ? "bg-white text-black border-white"
+                : "bg-transparent border-white text-white hover:bg-white hover:text-black"
             }`}
             onClick={() => setSelectedPlan("ascend")}
           >
             Ascend
           </button>
           <button
-            className={`w-full sm:w-auto border px-6 py-2 transition-colors duration-300 ${
+            className={`${buttonBaseClasses} ${
               selectedPlan === "pinnacle"
-                ? "bg-black border-white text-white shadow-lg"
-                : "border-white hover:bg-white hover:text-black"
+                ? "bg-white text-black border-white"
+                : "bg-transparent border-white text-white hover:bg-white hover:text-black"
             }`}
             onClick={() => setSelectedPlan("pinnacle")}
           >
@@ -50,60 +53,57 @@ export const Pricing: React.FC = () => {
           </button>
         </div>
       </section>
-       
 
-
-       {/* Pricing iframe section - White */}
-<section className="bg-white text-black p-0 sm:p-0">
-  <div className="w-full max-w-[1600px] mx-auto overflow-hidden">
-    {selectedPlan === "solo" && (
-      <iframe
-        src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTplUURuUXd4"
-        width="100%"
-        height="1200"
-        className="w-full min-h-screen !border-0 outline-none"
-        frameBorder="0"
-        scrolling="no"
-        style={{
-          border: "none",
-          overflow: "hidden",
-        }}
-        title="Solo Suite Pricing"
-      ></iframe>
-    )}
-    {selectedPlan === "ascend" && (
-      <iframe
-        src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTo1MTNKNHdH"
-        width="100%"
-        height="1200"
-        className="w-full min-h-screen !border-0 outline-none"
-        frameBorder="0"
-        scrolling="no"
-        style={{
-          border: "none",
-          overflow: "hidden",
-        }}
-        title="Ascend Pricing"
-      ></iframe>
-    )}
-    {selectedPlan === "pinnacle" && (
-      <iframe
-        src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTpZTTlibTNY"
-        width="100%"
-        height="1200"
-        className="w-full min-h-screen !border-0 outline-none"
-        frameBorder="0"
-        scrolling="no"
-        style={{
-          border: "none",
-          overflow: "hidden",
-        }}
-        title="Pinnacle Pricing"
-      ></iframe>
-    )}
-  </div>
-</section>
-
+      {/* Pricing iframe section - White */}
+      <section className="bg-white text-black p-0 sm:p-0">
+        <div className="w-full max-w-[1600px] mx-auto overflow-hidden">
+          {selectedPlan === "solo" && (
+            <iframe
+              src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTplUURuUXd4"
+              width="100%"
+              height="1200"
+              className="w-full min-h-screen !border-0 outline-none"
+              frameBorder="0"
+              scrolling="no"
+              style={{
+                border: "none",
+                overflow: "hidden",
+              }}
+              title="Solo Suite Pricing"
+            ></iframe>
+          )}
+          {selectedPlan === "ascend" && (
+            <iframe
+              src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTo1MTNKNHdH"
+              width="100%"
+              height="1200"
+              className="w-full min-h-screen !border-0 outline-none"
+              frameBorder="0"
+              scrolling="no"
+              style={{
+                border: "none",
+                overflow: "hidden",
+              }}
+              title="Ascend Pricing"
+            ></iframe>
+          )}
+          {selectedPlan === "pinnacle" && (
+            <iframe
+              src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTpZTTlibTNY"
+              width="100%"
+              height="1200"
+              className="w-full min-h-screen !border-0 outline-none"
+              frameBorder="0"
+              scrolling="no"
+              style={{
+                border: "none",
+                overflow: "hidden",
+              }}
+              title="Pinnacle Pricing"
+            ></iframe>
+          )}
+        </div>
+      </section>
     </main>
   );
 };
