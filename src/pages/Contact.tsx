@@ -1,6 +1,6 @@
  import React, { useEffect, useRef } from "react";
 
-import { ContactInfo } from "../components/ContactInfo";
+
 
 import { ContactForm } from "../components/ContactForm";
 
@@ -810,13 +810,7 @@ export const Contact: React.FC = () => {
         </div>
        
 
-        <div
-          ref={sectionRefs[2]}
-          className="section-container section-3 my-4 sm:my-16 p-2 sm:p-8 bg-white rounded-lg sm:rounded-xl shadow-lg relative overflow-hidden transition-all duration-500"
-
-        >
-          <ContactInfo />
-        </div>
+        
       </main>
     </>
   );

@@ -42,7 +42,7 @@ export const PhoneFormMockup: React.FC<PhoneFormMockupProps> = ({
   statusOffset = 12,
   fixedInViewport = true,
   containerHeight = '75vh',
-  maxWidthPx = 360,
+  maxWidthPx = 380,
 }) => {
   // Memoize the container style for performance, recalculating only when dependencies change.
   const containerStyle = useMemo<React.CSSProperties>(
@@ -163,7 +163,7 @@ export const PhoneFormMockup: React.FC<PhoneFormMockupProps> = ({
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: '6px 10px',
+              padding: "24px 20px 18px",
               borderBottom: '1px solid rgba(0,0,0,0.06)',
             }}
           >

@@ -23,22 +23,25 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   overlayClassName = "",
 }) => {
   // Electric Blue accent
-  const ELECTRIC = "#00BFFF"
+  const ELECTRIC = "#488ff8"
 
   // Logos split into two rows
   const row1 = [
-    { src: "/assets/Whatsapp.png", alt: "WhatsApp" },
-    { src: "/assets/meta.png", alt: "Meta" },
-    { src: "/assets/twilio.png", alt: "Twilio" },
-    { src: "/assets/calcom.png", alt: "Cal.com" },
+    { src: "./assets/stripe.png", alt: "Stripe" },
+    { src: "./assets/calendly.png", alt: "Calendly" },
+    { src: "./assets/airtable.png", alt: "Airtable" },
+    { src: "./assets/Clickup.png", alt: "ClickUp" },
+    { src: "./assets/calendar.png", alt: "Calendar" },
    
   ]
+
+   
+    
   const row2 = [
-     { src: "/assets/stripe.png", alt: "Stripe" },
-    { src: "/assets/calendly.png", alt: "Calendly" },
-    { src: "/assets/airtable.png", alt: "Airtable" },
-    { src: "/assets/Clickup.png", alt: "ClickUp" },
-    { src: "/assets/calendar.png", alt: "Calendar" },
+     { src: "./assets/Whatsapp.png", alt: "WhatsApp" },
+    { src: "./assets/meta.png", alt: "Meta" },
+    { src: "./assets/twilio.png", alt: "Twilio" },
+    { src: "./assets/calcom.png", alt: "Cal.com" },
     
   ]
 
