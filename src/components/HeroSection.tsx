@@ -316,11 +316,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         .marquee { --gap-x: 2rem; }
         .marquee-track {
           display: flex;
-          width: 110%;
+          width: 200%;
         }
         .marquee-group {
           flex: none;
-          min-width: 60%;
+          min-width: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
