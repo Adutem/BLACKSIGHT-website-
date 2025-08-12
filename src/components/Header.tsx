@@ -1,14 +1,14 @@
-import React from "react"
-import { Link, NavLink, useLocation } from "react-router-dom"
+import React from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 export const Header: React.FC = () => {
-  const [open, setOpen] = React.useState(false)
-  const location = useLocation()
+  const [open, setOpen] = React.useState(false);
+  const location = useLocation();
 
   // Close mobile menu on route change
   React.useEffect(() => {
-    setOpen(false)
-  }, [location.pathname])
+    setOpen(false);
+  }, [location.pathname]);
 
   const links = [
     { to: "/", label: "Home" },
@@ -16,28 +16,23 @@ export const Header: React.FC = () => {
     { to: "/pricing", label: "Pricing" },
     { to: "/about", label: "About Us" },
     { to: "/contact", label: "Contact" },
-  ] as const
+  ] as const;
 
   const baseLink =
-    "relative px-2 py-1 text-sm sm:text-base transition-colors duration-200"
+    "relative px-2 py-1 text-sm sm:text-base transition-colors duration-200";
   const activeLink =
-    "text-[#488ff8] font-semibold after:absolute after:left-1/2 after:-translate-x-1/2 after:-bottom-1 after:h-[2px] after:w-6 after:rounded-full after:bg-[#488ff8]"
-  const inactiveLink = "text-gray-700 hover:text-[#488ff8] font-semibold"
+    "text-[#488ff8] font-semibold after:absolute after:left-1/2 after:-translate-x-1/2 after:-bottom-1 after:h-[2px] after:w-6 after:rounded-full after:bg-[#488ff8]";
+  const inactiveLink = "text-gray-700 hover:text-[#488ff8] font-semibold";
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-2 sm:py-3">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-4 sm:py-5">
         {/* Brand */}
-        <Link to="/" className="flex items-center gap-2">
-          <img
-            src="./assets/bblacksight-removebg.png"
-            alt="Blacksight Logo"
-            className="h-12 w-auto sm:h-8"
-          />
-          <span className="text-lg sm:text-xl font-bold text-[#488ff8]">
-            Blacksight
-          </span>
-        </Link>
+        <img
+          src="./assets/blacksightbackground.png"
+          alt="blacksight logo"
+          className="h-10" // Increased height for better fit
+        />
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-5">
@@ -78,7 +73,9 @@ export const Header: React.FC = () => {
         >
           <span className="sr-only">Open main menu</span>
           <svg
-            className={`h-6 w-6 transition-transform ${open ? "rotate-90" : ""}`}
+            className={`h-6 w-6 transition-transform ${
+              open ? "rotate-90" : ""
+            }`}
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -86,9 +83,17 @@ export const Header: React.FC = () => {
             strokeWidth={2}
           >
             {open ? (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             )}
           </svg>
         </button>
@@ -137,7 +142,7 @@ export const Header: React.FC = () => {
         </nav>
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

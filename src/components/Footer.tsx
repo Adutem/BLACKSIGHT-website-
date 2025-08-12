@@ -60,52 +60,58 @@ export const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-white py-8">
+    <footer
+      className="bg-white py-8"
+      style={{
+        backgroundImage: "url('./assets/footer-bg.png')", // your background image
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="max-w-6xl mx-auto px-4">
         {/* Upper Footer Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-start mb-6">
+        <div className="flex flex-col lg:flex-row justify-between items-end mb-6">
           {/* Left Side - Brand Identity */}
-          <div className="mb-6 lg:mb-0">
-            <div className="flex items-center mb-2">
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
-                <div className="w-6 h-6 border-2 border-white rounded-full"></div>
-              </div>
-              <span className="font-bold text-lg text-gray-800">BlackSight</span>
-            </div>
+          <div className="flex items-end gap-4 mt-4 lg:mt-0">
+            <img
+              src="./assets/Blacksightbackground.png"
+              alt="BlackSight"
+              className="h-30 object-contain"
+            />
           </div>
 
           {/* Middle Section - Navigation Links */}
-          <div className="flex flex-col sm:flex-row gap-8 mb-6 lg:mb-0">
+          <div className="flex flex-col sm:flex-row gap-9">
             <LinkList title="Quick Links" links={quickLinks} />
             <LinkList title="Company" links={companyLinks} />
             <LinkList title="Resources" links={resourceLinks} />
           </div>
 
           {/* Right Side - Social Media */}
-          <div className="flex flex-col items-start">
-            {/* Icons above text */}
-            <div className="flex gap-6 text-center">
-              {socialLinks.map(({ href, label, Icon }) => (
-                <a
-                  key={href}
-                  href={href}
-                  className="flex flex-col items-center text-blue-500 hover:text-blue-600 transition-colors"
-                >
-                  <Icon className="h-6 w-6 mb-1" />
-                  <span className="text-sm text-gray-700">{label}</span>
-                </a>
-              ))}
-            </div>
-          </div>
+          {/* Right Side - Social Media */}
+<div className="flex items-end">
+  <div className="flex gap-6 text-center">
+    {socialLinks.map(({ href, label, Icon }) => (
+      <a
+        key={href}
+        href={href}
+        className="flex flex-col items-center text-blue-500 hover:text-blue-600 transition-colors"
+      >
+        <Icon className="h-6 w-6 mb-1" />
+        <span className="text-sm text-gray-700">{label}</span>
+      </a>
+    ))}
+  </div>
+</div>
+
         </div>
 
         {/* Separator Line */}
         <div className="border-t border-black mb-6"></div>
 
-
         {/* Lower Footer Section */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-          <div className="text-sm text-black-600 mb-4 sm:mb-0">
+        <div className="flex flex-col sm:flex-row justify-between items-center">
+          <div className="text-sm text-black-600 text-center sm:text-left mb-4 sm:mb-0">
             <p>Automate your business with the smart Blacksight AI for Business</p>
             <p>Unlock your Business full Potential today</p>
           </div>
