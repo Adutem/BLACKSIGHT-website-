@@ -30,7 +30,7 @@ export default function Products() {
   )
 
   return (
-    <div className="min-h-screen w-full bg-white">
+    <div className="min-h-screen w-full bg-white mb-20">
       {/* Page Heading */}
       <div className="mx-auto max-w-6xl px-4 sm:px-6 pt-10 sm:pt-14">
         <h1 className="text-center text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
@@ -41,7 +41,7 @@ export default function Products() {
       <div className="mt-10 space-y-20 sm:space-y-28">
         {/* VOICE SECTION (Top: phone mockup + price card) */}
         <SectionShell>
-          <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 sm:gap-14">
+          <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 sm:gap-14 ">
             {/* Left: Phone with the Lead Form inside (matches screenshot) */}
            
            
@@ -74,7 +74,7 @@ export default function Products() {
 
         {/* CHAT SECTION (Bottom: chat UI + price card) */}
         <SectionShell>
-          <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 sm:gap-14">
+          <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 sm:gap-14  mt-10 sm:mt-14">
             {/* Left: Chat product card */}
             <div>
               <ProductCardV2
