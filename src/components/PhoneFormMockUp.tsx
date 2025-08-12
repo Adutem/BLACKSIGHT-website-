@@ -53,8 +53,11 @@ export const PhoneFormMockup: React.FC<PhoneFormMockupProps> = ({
       maxWidth: maxWidthPx,
       margin: '0 auto',
       height: containerHeight,
+      
       overflow: 'hidden',
       borderRadius: 16,
+      transform: 'translateX(-0px)', // moves card 10px left
+
     }),
     [fixedInViewport, containerHeight, maxWidthPx]
   );
@@ -75,18 +78,18 @@ export const PhoneFormMockup: React.FC<PhoneFormMockupProps> = ({
   // Template literals are used here to correctly format the percentage values in the style object.
   const screenStyle = useMemo<React.CSSProperties>(
     () => ({
-      position: 'absolute',
-      top: `${screenRect.topPct}%`,
-      left: `${screenRect.leftPct}%`,
-      width: `${screenRect.widthPct}%`,
-      height: `${screenRect.heightPct}%`,
-      borderRadius: 14,
-      overflow: 'hidden',
-      background: '#FFFFFF',
-      boxShadow: '0 12px 30px -12px rgba(0,0,0,0.25)',
-      display: 'flex',
-      flexDirection: 'column',
-      zIndex: 1,
+          position: 'absolute',
+    top: `${screenRect.topPct}%`,
+    left: `${screenRect.leftPct}%`,  // << move this left
+    width: `${screenRect.widthPct}%`,
+    height: `${screenRect.heightPct}%`,
+    borderRadius: 14,
+    overflow: 'hidden',
+    background: '#FFFFFF',
+    boxShadow: '0 12px 30px -12px rgba(0,0,0,0.25)',
+    display: 'flex',
+    flexDirection: 'column',
+    zIndex: 1,
     }),
     [screenRect]
   );
@@ -124,6 +127,7 @@ export const PhoneFormMockup: React.FC<PhoneFormMockupProps> = ({
       flexDirection: 'column',
       padding: '18px 16px 14px',
       overflowY: 'auto',
+      marginLeft: '-10px',
       backgroundImage: 'radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px)',
       backgroundSize: '12px 12px',
     }),
@@ -176,7 +180,7 @@ export const PhoneFormMockup: React.FC<PhoneFormMockupProps> = ({
           </div>
 
           <div style={formWrapperStyle}>
-            <h2 style={{ fontSize: 14, fontWeight: 700, marginBottom: 8, color: '#1F2937' }}>
+            <h2 style={{ fontSize: 14, fontWeight: 700, marginBottom: 8,  color: '#1F2937' }}>
               {'Get a Live call From Nova AI'}
             </h2>
 

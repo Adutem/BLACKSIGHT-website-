@@ -5,206 +5,116 @@ const images = [
   "./assets/keyfeatures.png",
   "./assets/keyfeatures1.png",
   "./assets/keyfeatures2.png",
-   "./assets/keyfeatures3.png",
+  "./assets/keyfeatures3.png",
 ];
 
-const initialTexts = [
+type TextItem = {
+  title: string;
+  description?: string;
+  items?: string[];
+};
+
+const initialTexts: TextItem[] = [
   {
     title: "Human Like AI-Agent",
+    description: "Blacksight deployed intelligent systems that communucate to customers just like real human staff, capable of handling:",
     items: [
-      "Understanding your unique business needs",
-      "Identifying key opportunities for AI integration",
-      "Analyzing current processes and pain points",
-      ""
+      "Customers support inquiries",
+      "Appointments booking",
+      "common issue resolution",
     ],
   },
   {
-    title: "Step 2: Strategy",
+    title: "Omninchannel Support integration",
+    description: "Ensuring consistence service delivery regardless of where the customer reach out",
     items: [
-      "Creating a tailored AI solution roadmap",
-      "Setting clear objectives and success metrics",
-      "Aligning AI strategy with business goals",
+      "Website Chat widget",
+      "Whatsapp",
+      "Facebook Messenger",
+      "Email",
     ],
   },
   {
-    title: "Step 3: Implementation",
-    items: [
-      "Building and integrating your AI system",
-      "Conducting thorough testing and validation",
-      "Training your team on the new system",
-    ],
+    title: "Self updating Knowledge Base",
+    description: "The system learn from interaction and updates its knowledge base dynamically, reducing the need for manual FAQ updates or staff intervention.",
   },
   {
-    title: "Step 4: Optimization",
+    title: "Workflow Automation Engine",
+    description: "BlackSight automates backend tasks like:",
     items: [
-      "Continuously improving your AI solution",
-      "Monitoring performance and gathering feedback",
-      "Scaling successful implementations",
+      "Lead qualification and routing",
+      "Task assignment to human staff",
+      "Follow-up reminders  This reduces manual labor and speeds up response times.",
     ],
   },
 ];
 
 export const JourneyStepCarousel: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [texts, setTexts] = useState(initialTexts);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingText, setEditingText] = useState({ title: '', items: [''] });
+  const [texts] = useState<TextItem[]>(initialTexts);
+  const [animate, setAnimate] = useState(false);
 
-  // Auto-slide every 3 seconds
+  // Auto-slide every 3 seconds and trigger animation
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % images.length);
+      setAnimate(true);
+      setTimeout(() => setAnimate(false), 600);
     }, 3000);
     return () => clearInterval(timer);
   }, []);
 
-  // Handle text edit
-  const handleEdit = () => {
-    setEditingText({
-      title: texts[activeIndex].title,
-      items: [...texts[activeIndex].items],
-    });
-    setIsEditing(true);
-  };
-
-  // Save edited text
-  const saveText = () => {
-    const newTexts = [...texts];
-    newTexts[activeIndex] = editingText;
-    setTexts(newTexts);
-    setIsEditing(false);
-  };
-
-  // Handle item change
-  const handleItemChange = (index: number, value: string) => {
-    const newItems = [...editingText.items];
-    newItems[index] = value;
-    setEditingText({ ...editingText, items: newItems });
-  };
-
-  // Add new item
-  const addItem = () => {
-    setEditingText({ ...editingText, items: [...editingText.items, ''] });
-  };
-
-  // Remove item
-  const removeItem = (index: number) => {
-    if (editingText.items.length <= 1) return;
-    const newItems = [...editingText.items];
-    newItems.splice(index, 1);
-    setEditingText({ ...editingText, items: newItems });
+  // Trigger animation on manual navigation via dots
+  const onDotClick = (index: number) => {
+    setActiveIndex(index);
+    setAnimate(true);
+    setTimeout(() => setAnimate(false), 600);
   };
 
   return (
     <section className="flex flex-col items-center justify-center py-6 sm:py-10 bg-white">
-      <div className="w-full max-w-md sm:max-w-4xl relative"> {/* Wider container */}
+      {/* Main Title */}
+      <h2 className="text-3xl font-bold mb-6 text-gray-900">Key  Features Of Blacksight  AI</h2>
+
+      <div className="w-full max-w-md sm:max-w-4xl relative">
         {/* Image with text overlay */}
         <div className="relative rounded-lg shadow-lg overflow-hidden">
           <img
             src={images[activeIndex]}
             alt={`journey-step-${activeIndex}`}
-            className="w-full h-48 sm:h-80 object-cover transition-all duration-700" // Wider and taller image
+            className="w-full h-48 sm:h-80 object-cover transition-all duration-700"
           />
 
-          {/* Text overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-4 sm:p-6">
-            {isEditing ? (
-              <div className="space-y-3">
-                <input
-                  type="text"
-                  value={editingText.title}
-                  onChange={(e) => setEditingText({ ...editingText, title: e.target.value })}
-                  className="w-full bg-white/20 text-white font-bold text-xl sm:text-2xl p-2 rounded border border-white/30"
-                  placeholder="Title"
-                />
-                <div className="space-y-2 max-h-40 overflow-y-auto"> {/* Increased max-height for taller overlay */}
-                  {editingText.items.map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-2">
-                      <span className="text-white">•</span>
-                      <input
-                        type="text"
-                        value={item}
-                        onChange={(e) => handleItemChange(idx, e.target.value)}
-                        className="flex-1 bg-white/20 text-white p-2 rounded border border-white/30 text-sm sm:text-base"
-                        placeholder={`Item ${idx + 1}`}
-                      />
-                      {editingText.items.length > 1 && (
-                        <button
-                          onClick={() => removeItem(idx)}
-                          className="text-red-300 hover:text-red-500"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <button
-                  onClick={addItem}
-                  className="text-blue-300 hover:text-blue-500 text-sm flex items-center gap-1"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                  Add Item
-                </button>
-                <div className="flex gap-2 pt-2">
-                  <button
-                    onClick={saveText}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={() => setIsEditing(false)}
-                    className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <h3 className="text-white font-bold text-xl sm:text-2xl mb-2">
-                  {texts[activeIndex].title}
-                </h3>
-                <ul className="space-y-1">
+          {/* Centered Text overlay */}
+          <div
+            className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-center items-center text-center p-4 sm:p-6 transition-transform duration-500 ${
+              animate ? '-translate-y-2 opacity-90' : 'translate-y-0 opacity-100'
+            }`}
+            style={{ willChange: 'transform, opacity' }}
+          >
+            <div>
+              <h3 className="text-white font-bold text-xl sm:text-2xl mb-2">
+                {texts[activeIndex].title}
+              </h3>
+              {texts[activeIndex].description && (
+                <p className="text-white/90 mb-2 text-sm sm:text-base max-w-lg mx-auto">
+                  {texts[activeIndex].description}
+                </p>
+              )}
+              {texts[activeIndex].items && texts[activeIndex].items.length > 0 && (
+                <ul className="space-y-1 max-w-md mx-auto">
                   {texts[activeIndex].items.map((item, idx) => (
                     <li
                       key={idx}
-                      className="text-white/90 text-sm sm:text-base flex items-start"
+                      className="text-white/90 text-sm sm:text-base flex items-center"
                     >
                       <span className="mr-2">•</span>
                       <span>{item}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
@@ -216,7 +126,7 @@ export const JourneyStepCarousel: React.FC = () => {
               className={`w-2 sm:w-3 h-2 sm:h-3 rounded-full transition ${
                 idx === activeIndex ? "bg-blue-600" : "bg-gray-300"
               }`}
-              onClick={() => setActiveIndex(idx)}
+              onClick={() => onDotClick(idx)}
               aria-label={`Go to image ${idx + 1}`}
             />
           ))}

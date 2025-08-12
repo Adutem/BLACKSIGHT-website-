@@ -30,9 +30,9 @@ export const Header: React.FC = () => {
         {/* Brand */}
         <Link to="/" className="flex items-center gap-2">
           <img
-            src="./assets/bblacksight.png"
+            src="./assets/bblacksight-removebg.png"
             alt="Blacksight Logo"
-            className="h-32 w-auto sm:h-8"
+            className="h-12 w-auto sm:h-8"
           />
           <span className="text-lg sm:text-xl font-bold text-[#488ff8]">
             Blacksight

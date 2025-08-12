@@ -333,7 +333,7 @@ export default function AiVoiceHero({
 
         <p className="mt-4 text-center text-sm sm:text-base text-zinc-600">
           {subline.split("24/7")[0]}
-          <span className="text-blue-600 font-medium">24/7</span>
+          <span className="text-blue-500 font-medium">24/7</span>
           {subline.split("24/7")[1] ?? ""}
         </p>
 
@@ -358,7 +358,7 @@ export default function AiVoiceHero({
               onClick={handleTogglePlay}
               className={[
                 "inline-flex items-center gap-2 rounded-full",
-                "bg-blue-600 px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-white",
+                "bg-blue-500 px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-medium text-white",
                 "shadow-sm shadow-blue-600/30 hover:bg-blue-700 active:bg-blue-700",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
                 "transition-colors",

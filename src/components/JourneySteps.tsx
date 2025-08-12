@@ -22,10 +22,20 @@ const steps = [
 export const JourneySteps: React.FC = () => (
   <section className="bg-white py-6 sm:py-12 px-2 sm:px-4 overflow-hidden">
     <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-10">Your Journey, Step by Step</h2>
-    <div className="space-y-12 sm:space-y-16"> {/* Increased vertical spacing between steps */}
+    <div className="space-y-12 sm:space-y-16">
       {steps.map((step, i) => (
         <StepCard key={i} {...step} index={i} />
       ))}
+    </div>
+
+    {/* Button container */}
+    <div className="mt-10 flex justify-center">
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-9 rounded shadow transition"
+        onClick={() => alert('Get Started clicked!')}
+      >
+        Get Started
+      </button>
     </div>
   </section>
 );

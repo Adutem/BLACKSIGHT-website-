@@ -44,7 +44,7 @@ export default function JoinCommunities({
           </div>
 
           {/* Right: Icons row */}
-          <ul className="flex items-end gap-4 sm:gap-6">
+          <ul className="flex items-left gap-4 sm:gap-6 ">
             {communities.map(({ name, href, Icon }) => (
               <li key={name} className="text-center">
                 <a
@@ -63,7 +63,7 @@ export default function JoinCommunities({
                       "shadow-sm",
                     ].join(" ")}
                   >
-                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+                    <Icon className="h-4 w-4 sm:h-5 sm:w-5 " />
                   </span>
                   <span className="text-[10px] sm:text-xs text-gray-500">{name}</span>
                 </a>

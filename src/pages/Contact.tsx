@@ -790,7 +790,7 @@ export const Contact: React.FC = () => {
 
           ref={sectionRefs[0]}
 
-          className="section-container section-1 my-4 sm:my-16 p-2 sm:p-8 bg-white rounded-lg sm:rounded-xl shadow-lg relative overflow-hidden transition-all duration-500"
+          className="section-container section-1 my-4 sm:my-16 p-2 sm:p-8 bg-white  sm:rounded-xl relative overflow-hidden transition-all duration-500"
 
         >
 
@@ -804,7 +804,7 @@ export const Contact: React.FC = () => {
 
           ref={sectionRefs[1]}
 
-          className="section-container section-2 my-4 sm:my-16 p-2 sm:p-8 bg-white rounded-lg sm:rounded-xl shadow-lg relative overflow-hidden transition-all duration-500">
+          className="section-container section-2 my-4 sm:my-16 p-2 sm:p-8 bg-white  sm:rounded-xl  relative overflow-hidden transition-all duration-500">
           <ScheduleCall />
 
         </div>

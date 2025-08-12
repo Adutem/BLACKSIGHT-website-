@@ -51,7 +51,7 @@ export const ContactForm: React.FC = () => {
           </div>
           
           {/* Phone Number */}
-          <div className="bg-white p-3 sm:p-4 rounded-md shadow-inner">
+          <div className="bg-white p-3 sm:p-4 rounded-md ">
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
               Phone Number
             </label>
@@ -112,14 +112,17 @@ export const ContactForm: React.FC = () => {
           </div>
           
           {/* Submit Button */}
-          <div className="pt-2 sm:pt-4">
-            <button
-              type="submit"
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 sm:py-3 rounded-md transition-colors text-base sm:text-lg font-medium"
-            >
-              Submit Ticket
-            </button>
-          </div>
+
+        <div className=" justify-center flex items-center">
+  <button
+    type="submit"
+    className="w-auto bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 sm:py-3 rounded-md transition-colors text-base sm:text-lg font-medium"
+  >
+    Submit Ticket
+  </button>
+</div>
+
+
         </form>
       </div>
     </section>

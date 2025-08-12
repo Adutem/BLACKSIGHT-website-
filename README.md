@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -44,3 +45,20 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+=======
+This is the official frontend for BlackSight, an AI automation platform providing human-like virtual agents for customer support, appointment booking, and smart issue resolution.
+
+Features:
+Sleek, responsive user interface
+
+Optimized for lead conversion and user onboarding
+
+Seamless integration with BlackSight's AI backend
+
+Tech Stack
+Framework: Next.js / React
+
+Styling: Tailwind CSS, Framer Motion
+
+Deployment: AWS
+>>>>>>> 2c7fec1eaaecf288a52394e8f94aa43657cc0da5

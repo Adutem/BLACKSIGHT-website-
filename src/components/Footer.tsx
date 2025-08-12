@@ -100,15 +100,16 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Separator Line */}
-        <div className="border-t border-gray-400 mb-6"></div>
+        <div className="border-t border-black mb-6"></div>
+
 
         {/* Lower Footer Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-          <div className="text-sm text-gray-600 mb-4 sm:mb-0">
+          <div className="text-sm text-black-600 mb-4 sm:mb-0">
             <p>Automate your business with the smart Blacksight AI for Business</p>
             <p>Unlock your Business full Potential today</p>
           </div>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text--600">
             © Copyright Reserved 2025 | Adutem Innovations
           </div>
         </div>

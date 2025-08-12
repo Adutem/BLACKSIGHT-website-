@@ -117,7 +117,7 @@ export default function WhyNova({
           <button
             type="button"
             onClick={onClick}
-            className="rounded-md bg-blue-400 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            className="rounded-md bg-blue-500 px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
             aria-label={ctaButtonText}
           >
             {ctaButtonText}

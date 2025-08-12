@@ -356,8 +356,9 @@ export default function NodeBaseAutomation() {
   );
 
   return (
+  
     <div className="flex flex-col gap-6 mx-auto max-w-[900px] w-full rounded-lg">
-      {/* Bot Flow (keeps default look; no dashed border) */}
+      <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-10">Node Base Automation</h2>
       <div
         id="botflow"
         className="relative bg-white rounded-lg border border-gray-200"
