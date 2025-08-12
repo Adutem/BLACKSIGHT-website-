@@ -25,13 +25,13 @@ export const Header: React.FC = () => {
   const inactiveLink = "text-gray-700 hover:text-[#488ff8] font-semibold";
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow">
+    <header className="sticky top-0  h-40 z-50 w-full  bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-4 sm:py-5">
         {/* Brand */}
         <img
-          src="./assets/blacksightbackground.png"
+          src="./assets/hbackground.png"
           alt="blacksight logo"
-          className="h-10" // Increased height for better fit
+          className="h-20 w-30" // Increased height for better fit
         />
 
         {/* Desktop nav */}
