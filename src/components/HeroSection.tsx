@@ -50,12 +50,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     
   ]
 
-  // Typewriter content
-  const L1 = "The Leading Customer"
-  const L2_PREFIX = "Service "
-  const L2_HIGHLIGHT = "AI Platform"
-  const L3 = "for Creators"
-
   const reducedMotion = useMemo(
     () =>
       typeof window !== "undefined" &&
@@ -64,85 +58,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     [],
   )
 
-  const [typed1, setTyped1] = useState(0)
-  const [typed2, setTyped2] = useState(0) // across prefix + highlight
-  const [typed3, setTyped3] = useState(0)
-  const [stage, setStage] = useState<1 | 2 | 3 | 4>(1)
-
-  useEffect(() => {
-    if (reducedMotion) {
-      setTyped1(L1.length)
-      setTyped2(L2_PREFIX.length + L2_HIGHLIGHT.length)
-      setTyped3(L3.length)
-      setStage(4)
-      return
-    }
-
-    const speed = 34
-    const betweenLinesDelay = 280
-    let interval: number | null = null
-    let timeout: number | null = null
-
-    const startTyping = () => {
-      interval = window.setInterval(() => {
-        setStage((current) => {
-          if (current === 1) {
-            setTyped1((c) => {
-              const next = Math.min(L1.length, c + 1)
-              if (next === L1.length) {
-                if (interval) window.clearInterval(interval)
-                timeout = window.setTimeout(() => {
-                  setStage(2)
-                  startTyping()
-                }, betweenLinesDelay)
-              }
-              return next
-            })
-          } else if (current === 2) {
-            const total2 = L2_PREFIX.length + L2_HIGHLIGHT.length
-            setTyped2((c) => {
-              const next = Math.min(total2, c + 1)
-              if (next === total2) {
-                if (interval) window.clearInterval(interval)
-                timeout = window.setTimeout(() => {
-                  setStage(3)
-                  startTyping()
-                }, betweenLinesDelay)
-              }
-              return next
-            })
-          } else if (current === 3) {
-            setTyped3((c) => {
-              const next = Math.min(L3.length, c + 1)
-              if (next === L3.length) {
-                if (interval) window.clearInterval(interval)
-                setStage(4)
-              }
-              return next
-            })
-          }
-          return current
-        })
-      }, speed)
-    }
-
-    startTyping()
-    return () => {
-      if (interval) window.clearInterval(interval)
-      if (timeout) window.clearTimeout(timeout)
-    }
-  }, [reducedMotion])
-
-  // Derived typed parts for line 2
-  const typed2Prefix = Math.min(typed2, L2_PREFIX.length)
-  const typed2Highlight = Math.max(0, Math.min(L2_HIGHLIGHT.length, typed2 - L2_PREFIX.length))
-
-  const speed = 45; // slower typing
-  const betweenLinesDelay = 500; // small pause between lines
-
   
-  const Caret = () => <span className="caret" aria-hidden="true">|</span>;
-
   return (
     <section className="relative overflow-hidden">
       {/* Backgrounds */}
@@ -348,57 +264,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         
       </div>
 
-      {/* Animations and styles */}
-      <style>{`
-        /* Typewriter caret */
-        @keyframes caret-blink {
-          0%, 49% { opacity: 1; }
-          50%, 100% { opacity: 0; }
-        }
-        .caret {
-          display: inline-block;
-          margin-left: 2px;
-          width: 1ch;
-          color: ${ELECTRIC};
-          animation: caret-blink 1s step-end infinite;
-        }
-
-        /* Marquee setup */
-        .marquee { --gap-x: 2rem; }
-        .marquee-track {
-          display: flex;
-          width: 200%;
-        }
-        .marquee-group {
-          flex: none;
-          min-width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: var(--gap-x);
-        }
-
-        @keyframes marquee-left {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-        @keyframes marquee-right {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(50%); }
-        }
-
-        .marquee-left { animation: marquee-left 18s linear infinite; }
-        .marquee-right { animation: marquee-right 18s linear infinite; }
-
-        @media (min-width: 640px) {
-          .marquee-left { animation-duration: 16s; }
-          .marquee-right { animation-duration: 16s; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .marquee-left, .marquee-right { animation: none; transform: none; }
-        }
-      `}</style>
     </section>
   )
 }
