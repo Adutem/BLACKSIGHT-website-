@@ -167,7 +167,7 @@ const initialEdgesBot: Edge[] = [
     target: "ai-1",
     type: "smoothstep",
     style: { stroke: "#4285f4", strokeWidth: 1 },
-    markerEnd: { type: MarkerType.None },
+    markerEnd: { type: MarkerType.Arrow },
   },
   {
     id: "e2",
@@ -175,7 +175,7 @@ const initialEdgesBot: Edge[] = [
     target: "whatsapp-1",
     type: "smoothstep",
     style: { stroke: "#8e24aa", strokeWidth: 1 },
-    markerEnd: { type: MarkerType.None },
+    markerEnd: { type: MarkerType.Arrow },
   },
 ];
 
@@ -271,7 +271,7 @@ const initialEdgesVoice: Edge[] = [
     target: "ai-2",
     type: "smoothstep",
     style: { stroke: "#4285f4", strokeWidth: 1 },
-    markerEnd: { type: MarkerType.None },
+    markerEnd: { type: MarkerType.Arrow },
   },
   {
     id: "e4",
@@ -279,7 +279,7 @@ const initialEdgesVoice: Edge[] = [
     target: "action-1",
     type: "smoothstep",
     style: { stroke: "#8e24aa", strokeWidth: 1 },
-    markerEnd: { type: MarkerType.None },
+    markerEnd: { type: MarkerType.Arrow },
   },
   {
     id: "e5",
@@ -287,7 +287,7 @@ const initialEdgesVoice: Edge[] = [
     target: "logic-1",
     type: "smoothstep",
     style: { stroke: "#8e24aa", strokeWidth: 1 },
-    markerEnd: { type: MarkerType.None },
+    markerEnd: { type: MarkerType.Arrow },
   },
   {
     id: "e6",
@@ -295,7 +295,7 @@ const initialEdgesVoice: Edge[] = [
     target: "notification-1",
     type: "smoothstep",
     style: { stroke: "#4caf50", strokeWidth: 1 },
-    markerEnd: { type: MarkerType.None },
+    markerEnd: { type: MarkerType.Arrow },
   },
   {
     id: "e7",
@@ -303,7 +303,7 @@ const initialEdgesVoice: Edge[] = [
     target: "mail-1",
     type: "smoothstep",
     style: { stroke: "#4caf50", strokeWidth: 1 },
-    markerEnd: { type: MarkerType.None },
+    markerEnd: { type: MarkerType.Arrow },
   },
 ];
 
