@@ -254,7 +254,9 @@ export default function AiAssistantSteps({
               return (
                 <div
                   key={i}
-                  ref={(el) => (cardRefs.current[i] = el)}
+                  ref={(el) => {
+                    cardRefs.current[i] = el;
+                  }}
                   data-index={i}
                   className={["relative", "flex", alignClass].join(" ")}
                   style={{ marginTop: verticalOffset }}
