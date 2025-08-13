@@ -25,123 +25,121 @@ export const Header: React.FC = () => {
   const inactiveLink = "text-gray-700 hover:text-[#488ff8] font-semibold";
 
   return (
-    <header className="sticky top-0  h-40 z-50 w-full  bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-4 sm:py-5">
-        {/* Brand */}
-        <img
-          src="./assets/hbackground.png"
-          alt="blacksight logo"
-          className="h-20 w-30" // Increased height for better fit
-        />
+<header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow">
+  <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
+    
+    {/* Logo */}
+    <Link to="/" className="flex items-center space-x-2">
+      <img
+        src="./assets/hbackground.png"
+        alt="Blacksight Logo"
+        className="h-10 w-auto object-contain"
+      />
+    </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-5">
-          {links.map((l) => (
-            <NavLink
-              key={l.to}
-              to={l.to}
-              className={({ isActive }) =>
-                [baseLink, isActive ? activeLink : inactiveLink].join(" ")
-              }
-            >
-              {l.label}
-            </NavLink>
-          ))}
-        </nav>
-
-        {/* Actions */}
-        <div className="hidden sm:flex items-center gap-2">
-          <Link to="https://app.blacksight.co/user/signin">
-            <button className="rounded-lg bg-[#488ff8] px-4 py-2 text-sm sm:text-base font-medium text-white shadow-md transition hover:bg-[#3a7ae6] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#488ff8]">
-              Sign In
-            </button>
-          </Link>
-          <Link to="https://app.blacksight.co/user/signup">
-            <button className="rounded-lg bg-white px-4 py-2 text-sm sm:text-base font-medium text-[#488ff8] shadow-md ring-1 ring-inset ring-[#488ff8] transition hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#488ff8]">
-              Sign Up
-            </button>
-          </Link>
-        </div>
-
-        {/* Mobile hamburger */}
-        <button
-          type="button"
-          className="md:hidden inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#488ff8]"
-          aria-controls="mobile-menu"
-          aria-expanded={open}
-          onClick={() => setOpen((s) => !s)}
+    {/* Desktop Nav */}
+    <nav className="hidden md:flex items-center gap-6">
+      {links.map((l) => (
+        <NavLink
+          key={l.to}
+          to={l.to}
+          className={({ isActive }) =>
+            [
+              "text-sm font-medium transition-colors duration-200",
+              isActive
+                ? "text-[#488ff8]"
+                : "text-gray-700 hover:text-[#488ff8]",
+            ].join(" ")
+          }
         >
-          <span className="sr-only">Open main menu</span>
-          <svg
-            className={`h-6 w-6 transition-transform ${
-              open ? "rotate-90" : ""
-            }`}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            {open ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
+          {l.label}
+        </NavLink>
+      ))}
+    </nav>
+
+    {/* Desktop Actions */}
+    <div className="hidden sm:flex items-center gap-3">
+      <Link to="https://app.blacksight.co/user/signin">
+        <button className="rounded-lg bg-[#488ff8] px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-[#3a7ae6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#488ff8]">
+          Sign In
         </button>
-      </div>
+      </Link>
+      <Link to="https://app.blacksight.co/user/signup">
+        <button className="rounded-lg bg-white px-5 py-2 text-sm font-medium text-[#488ff8] shadow-sm ring-1 ring-[#488ff8] transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#488ff8]">
+          Sign Up
+        </button>
+      </Link>
+    </div>
 
-      {/* Mobile menu */}
-      <div
-        id="mobile-menu"
-        className={[
-          "md:hidden overflow-hidden border-t border-gray-100",
-          "transition-[max-height,opacity] duration-300 ease-out",
-          open ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
-        ].join(" ")}
+    {/* Mobile Hamburger */}
+    <button
+      type="button"
+      className="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#488ff8]"
+      aria-controls="mobile-menu"
+      aria-expanded={open}
+      onClick={() => setOpen((prev) => !prev)}
+    >
+      <svg
+        className={`h-6 w-6 transition-transform ${open ? "rotate-90" : ""}`}
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
       >
-        <nav className="px-4 sm:px-6 py-3 space-y-1">
-          {links.map((l) => (
-            <NavLink
-              key={l.to}
-              to={l.to}
-              className={({ isActive }) =>
-                [
-                  "block rounded-md px-3 py-2 text-base",
-                  isActive
-                    ? "bg-blue-50 text-[#488ff8] font-semibold"
-                    : "text-gray-700 hover:bg-gray-50",
-                ].join(" ")
-              }
-            >
-              {l.label}
-            </NavLink>
-          ))}
+        {open ? (
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+        ) : (
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        )}
+      </svg>
+    </button>
+  </div>
 
-          {/* Mobile actions */}
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            <Link to="/signin" className="col-span-1">
-              <button className="w-full rounded-lg bg-[#488ff8] px-4 py-2 text-sm font-medium text-white shadow-md transition hover:bg-[#3a7ae6] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#488ff8]">
-                Sign In
-              </button>
-            </Link>
-            <Link to="/signup" className="col-span-1">
-              <button className="w-full rounded-lg bg-white px-4 py-2 text-sm font-medium text-[#488ff8] shadow-md ring-1 ring-inset ring-[#488ff8] transition hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#488ff8]">
-                Sign Up
-              </button>
-            </Link>
-          </div>
-        </nav>
+  {/* Mobile Menu */}
+  <div
+    id="mobile-menu"
+    className={[
+      "md:hidden overflow-hidden border-t border-gray-100 bg-white",
+      "transition-[max-height,opacity] duration-300 ease-in-out",
+      open ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
+    ].join(" ")}
+  >
+    <nav className="px-4 sm:px-6 py-4 space-y-2">
+      {links.map((l) => (
+        <NavLink
+          key={l.to}
+          to={l.to}
+          className={({ isActive }) =>
+            [
+              "block rounded-md px-3 py-2 text-base font-medium transition",
+              isActive
+                ? "bg-blue-50 text-[#488ff8]"
+                : "text-gray-700 hover:bg-gray-50 hover:text-[#488ff8]",
+            ].join(" ")
+          }
+        >
+          {l.label}
+        </NavLink>
+      ))}
+
+      {/* Mobile Actions */}
+      <div className="mt-4 flex gap-3">
+        <Link to="/signin" className="flex-1">
+          <button className="w-full rounded-lg bg-[#488ff8] px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-[#3a7ae6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#488ff8]">
+            Sign In
+          </button>
+        </Link>
+        <Link to="/signup" className="flex-1">
+          <button className="w-full rounded-lg bg-white px-4 py-2 text-sm font-medium text-[#488ff8] shadow-sm ring-1 ring-[#488ff8] transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#488ff8]">
+            Sign Up
+          </button>
+        </Link>
       </div>
-    </header>
+    </nav>
+  </div>
+</header>
+
   );
 };
 
