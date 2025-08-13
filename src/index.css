@@ -2,3 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+/* globals.css or tailwind.css */
+.marquee {
+    --gap: 2rem;
+    display: flex;
+    overflow: hidden;
+    gap: var(--gap);
+  }
+  
+  .marquee-track {
+    display: flex;
+    gap: var(--gap);
+    min-width: 100%;
+    flex-shrink: 0;
+  }
+  
+  .marquee-group {
+    display: flex;
+    gap: var(--gap);
+    flex-shrink: 0;
+  }
+  
+  .marquee-left {
+    animation: marquee-left 20s linear infinite;
+  }
+  
+  .marquee-right {
+    animation: marquee-right 20s linear infinite;
+  }
+  
+  @keyframes marquee-left {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  
+  @keyframes marquee-right {
+    from {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  

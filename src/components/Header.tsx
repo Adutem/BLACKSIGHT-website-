@@ -25,8 +25,9 @@ export const Header: React.FC = () => {
   const inactiveLink = "text-gray-700 hover:text-[#488ff8] font-semibold";
 
   return (
-<header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow">
-  <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
+<header className="sticky top-0 z-50 w-full bg-white/95 px-4 sm:px-10 lg:px-20">
+
+  <div className="mx-auto flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
     
     {/* Logo */}
     <Link to="/" className="flex items-center space-x-2">

@@ -1,8 +1,10 @@
 "use client"
 
 import type React from "react"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import Marquee from "react-fast-marquee"
 import { Link } from "react-router-dom"
+import { TypeAnimation } from 'react-type-animation';
 
 type HeroSectionProps = {
   // Pass your PNG like: "/assets/hero-bg.png"
@@ -37,6 +39,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
    
     
+  const aiRef = useRef<HTMLSpanElement>(null);
+
+  
   const row2 = [
      { src: "./assets/Whatsapp.png", alt: "WhatsApp" },
     { src: "./assets/meta.png", alt: "Meta" },
@@ -132,6 +137,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   const typed2Prefix = Math.min(typed2, L2_PREFIX.length)
   const typed2Highlight = Math.max(0, Math.min(L2_HIGHLIGHT.length, typed2 - L2_PREFIX.length))
 
+  const speed = 45; // slower typing
+  const betweenLinesDelay = 500; // small pause between lines
+
+  
+  const Caret = () => <span className="caret" aria-hidden="true">|</span>;
+
   return (
     <section className="relative overflow-hidden">
       {/* Backgrounds */}
@@ -169,42 +180,95 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       )}
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-12">
+      <div className="relative z-10 mx-auto  px-4 sm:px-6 py-8 sm:py-12">
         {/* Top copy */}
         <div className="mx-auto max-w-4xl text-center">
           <h3 className="text-sm sm:text-base font-medium text-gray-700">One Platform, Endless Solutions</h3>
 
           {/* Headline with typewriter effect */}
-          <h1 className="mt-2 text-3xl leading-tight sm:text-6xl sm:leading-[1.05] font-extrabold tracking-tight text-gray-900">
-            {/* Line 1 */}
-            <span className="block">
-              {L1.slice(0, typed1)}
-              {stage === 1 && (
-                <span className="caret" aria-hidden="true">
-                  |
-                </span>
-              )}
-            </span>
-            {/* Line 2 */}
-            <span className="block">
-              <span>{L2_PREFIX.slice(0, typed2Prefix)}</span>
-              <span style={{ color: ELECTRIC }}>{L2_HIGHLIGHT.slice(0, typed2Highlight)}</span>
-              {stage === 2 && (
-                <span className="caret" aria-hidden="true">
-                  |
-                </span>
-              )}
-            </span>
-            {/* Line 3 */}
-            <span className="block" style={{ color: ELECTRIC }}>
-              {L3.slice(0, typed3)}
-              {stage === 3 && (
-                <span className="caret" aria-hidden="true">
-                  |
-                </span>
-              )}
-            </span>
-          </h1>
+         {/* Headline with typewriter effect */}
+         <span className="gap-4  mt-4 text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
+    
+  {/* L1 */}
+  <TypeAnimation
+    sequence={['The Leading Customer']}
+    speed={50}
+    wrapper="h1"
+    cursor={false} // disable cursor
+    style={{ display: 'block' }}
+    repeat={0}
+    className="mt-4 text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900"
+  />
+
+  {/* L2 */}
+  {/* <div className="text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
+  <TypeAnimation
+    sequence={['Service ']}
+    speed={50}
+    wrapper="span"
+    cursor={false}
+    repeat={0}
+  />
+  <TypeAnimation
+    sequence={['AI Platform']}
+    speed={50}
+    wrapper="span"
+    cursor={false}
+    repeat={0}
+    style={{ color: ELECTRIC }}
+    // className="text-primary-1"
+  />
+</div> */}
+
+<div className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
+      <TypeAnimation
+        sequence={[
+          "Service ",
+          () => {
+            if (aiRef.current) {
+              aiRef.current.style.visibility = "visible";
+            }
+          }
+        ]}
+        speed={50}
+        wrapper="span"
+        cursor={false}
+        repeat={0}
+      />
+
+      <span
+        ref={aiRef}
+        style={{ visibility: "hidden" }}
+        className="text-primary-1"
+      >
+        <TypeAnimation
+          sequence={["AI Platform"]}
+          speed={50}
+          wrapper="span"
+          cursor={false}
+    style={{ color: ELECTRIC }}
+    repeat={0}
+        />
+      </span>
+    </div>
+
+  {/* L3 */}
+<div className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
+  
+  <TypeAnimation
+    sequence={['for Creators']}
+    speed={50}
+    wrapper="span"
+    cursor={false}
+    repeat={0}
+    style={{ color: ELECTRIC }}
+    className="mt-4"
+  />
+
+  </div>
+</span>
+
+
 
           {/* Actions */}
           <div className="mt-5 sm:mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
@@ -241,63 +305,47 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         {/* Logos strip with continuous, opposite-direction marquee */}
         <div className="mt-3 sm:mt-7" role="region" aria-label="Partner logos">
           <div className="px-4 py-3 sm:px-6 sm:py-4">
-            {/* Row 1: continuous left */}
-            <div className="marquee overflow-hidden">
-              <div className="marquee-track marquee-left">
-                {/* group 1 */}
-                <div className="marquee-group">
-                  {row1.map((logo) => (
-                    <img
-                      key={`r1a-${logo.alt}`}
-                      src={logo.src || "/placeholder.svg"}
-                      alt={logo.alt}
-                      className="h-6 sm:h-7"
-                    />
-                  ))}
-                </div>
-                {/* group 2 (duplicate for seamless loop) */}
-                <div className="marquee-group" aria-hidden="true">
-                  {row1.map((logo) => (
-                    <img
-                      key={`r1b-${logo.alt}`}
-                      src={logo.src || "/placeholder.svg"}
-                      alt=""
-                      className="h-6 sm:h-7 opacity-90"
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
 
-            {/* Row 2: continuous right */}
-            <div className="mt-3 marquee overflow-hidden">
-              <div className="marquee-track marquee-right">
-                {/* group 1 */}
-                <div className="marquee-group">
-                  {row2.map((logo) => (
-                    <img
-                      key={`r2a-${logo.alt}`}
-                      src={logo.src || "/placeholder.svg"}
-                      alt={logo.alt}
-                      className="h-6 sm:h-7"
-                    />
-                  ))}
-                </div>
-                {/* group 2 (duplicate) */}
-                <div className="marquee-group" aria-hidden="true">
-                  {row2.map((logo) => (
-                    <img
-                      key={`r2b-${logo.alt}`}
-                      src={logo.src || "/placeholder.svg"}
-                      alt=""
-                      className="h-6 sm:h-7 opacity-90"
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
+          <div className="space-y-6">
+      {/* Row 1 - scroll left */}
+      <Marquee
+        gradient={false}
+        speed={40} // Adjust scroll speed
+        pauseOnHover={true}
+        direction="left"
+      >
+        {row1.map((logo) => (
+          <img
+            key={logo.alt}
+            src={logo.src || "/placeholder.svg"}
+            alt={logo.alt}
+            className="mx-8 h-6 sm:h-7"
+          />
+        ))}
+      </Marquee>
+
+      {/* Row 2 - scroll right */}
+      <Marquee
+        gradient={false}
+        speed={40}
+        pauseOnHover={true}
+        direction="right"
+      >
+        {row2.map((logo) => (
+          <img
+            key={logo.alt}
+            src={logo.src || "/placeholder.svg"}
+            alt={logo.alt}
+            className="mx-8 h-6 sm:h-7"
+          />
+        ))}
+      </Marquee>
+    </div>
+
           </div>
         </div>
+
+        
       </div>
 
       {/* Animations and styles */}
