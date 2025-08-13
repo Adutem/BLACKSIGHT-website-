@@ -72,6 +72,8 @@ export default function Products() {
           </div>
         </SectionShell>
 
+        
+
         {/* CHAT SECTION (Bottom: chat UI + price card) */}
         <SectionShell>
           <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-10 sm:gap-14  mt-10 sm:mt-14">

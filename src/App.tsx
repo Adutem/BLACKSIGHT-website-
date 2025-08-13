@@ -20,6 +20,7 @@ import  FaqDemo  from "./pages/carousel-demo"; // Importing the carousel demo
 import JoinCommunitiesDemo from "./pages/join-communities-demo"; // Importing the join communities demo
 import { PhoneFormMockup } from "./components/PhoneFormMockUp";
 import { Footer } from "./components/Footer";
+import PhoneFormMockupDeviceFramSet from "./components/PhoneMockUpFormDeviceFrameset";
 
 const App: React.FC = () => {
 
@@ -40,7 +41,13 @@ const App: React.FC = () => {
       <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 max-w-2xl text-gray-800">
         Your Next Business Breakthrough Could Be a Call Away — Meet Nova
       </h2>
-                <PhoneFormMockup frameSrc="./assets/phonemockup.svg" screenRect={{ topPct: 9, leftPct: 8, widthPct: 92, heightPct: 83 }} />
+
+
+      <PhoneFormMockupDeviceFramSet />
+
+
+
+                {/* <PhoneFormMockup frameSrc="./assets/phonemockup.svg" screenRect={{ topPct: 9, leftPct: 8, widthPct: 92, heightPct: 83 }} /> */}
     </section>
                 <JourneySteps />
                 <JourneyStepCarousel />
