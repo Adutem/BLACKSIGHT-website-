@@ -359,11 +359,18 @@ export default function NodeBaseAutomation() {
   
     <div className="flex flex-col gap-6 mx-auto max-w-[900px] w-full rounded-lg">
       <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-10">Node Base Automation</h2>
-      <div
+      {/* <div
         id="botflow"
         className="relative bg-white rounded-lg border border-gray-200"
         style={{ height: 220, width: BOUNDARY_WIDTH }}
-      >
+      > */}
+
+<div
+  id="botflow"
+  className="relative bg-white rounded-lg border border-gray-200 w-full"
+  style={{ height: 220 }}
+>
+
         <ReactFlow
           nodes={botNodes}
           edges={botEdges}
@@ -391,8 +398,11 @@ export default function NodeBaseAutomation() {
       {/* Voice Flow */}
       <div
         id="voiceflow"
-        className="relative bg-white rounded-lg border border-gray-200"
-        style={{ height: BOUNDARY_HEIGHT, width: BOUNDARY_WIDTH }}
+        // className="relative bg-white rounded-lg border border-gray-200"
+        // style={{ height: BOUNDARY_HEIGHT, width: BOUNDARY_WIDTH }}
+        
+  className="relative bg-white rounded-lg border border-gray-200 w-full"
+  style={{ height: 220 }}
       >
         <ReactFlow
           nodes={voiceNodes}
