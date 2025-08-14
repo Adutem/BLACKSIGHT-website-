@@ -40,9 +40,9 @@ export default function JoinCommunities({
           </div>
 
           {/* Right: Icons row */}
-          <ul className="flex items-end gap-3 sm:gap-4">
+          {/* <ul className="flex items-end gap-3 sm:gap-4"> */}
             {communities.map(({ name, href, Icon }) => (
-              <li key={name} className="text-center">
+              <div key={name} className="text-center">
                 <a
                   href={href}
                   target="_blank"
@@ -63,9 +63,9 @@ export default function JoinCommunities({
                   </span>
                   <span className="text-[10px] sm:text-xs text-gray-500">{name}</span>
                 </a>
-              </li>
+              </div>
             ))}
-          </ul>
+          {/* </ul> */}
         </div>
       </div>
     </section>
