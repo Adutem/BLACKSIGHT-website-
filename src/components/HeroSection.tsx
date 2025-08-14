@@ -125,13 +125,14 @@ className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] f
         className="text-primary-1, pl-8"
       >
         <TypeAnimation
-          sequence={["AI Platform"]}
-          speed={50}
-          wrapper="span"
-          cursor={false}
-    style={{ color: ELECTRIC }}
-    repeat={20}
-        />
+  sequence={["AI Platform"]}
+  speed={50}
+  wrapper="span"
+  cursor={false}
+  style={{ color: ELECTRIC }}
+  repeat={Infinity}
+/>
+
       </span>
   </h1>
 
@@ -146,7 +147,8 @@ className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] f
     speed={50}
     wrapper="span"
     cursor={false}
-    repeat={0}
+  repeat={Infinity}
+    
     style={{ color: ELECTRIC }}
     className="mt-4"
   />
