@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import  {Header}  from "./components/Header";
 import  HeroSection  from "./components/HeroSection";
-import LeadForm from "./components/LeadForm";
+// import LeadForm from "./components/LeadForm";
 import { JourneySteps } from "./components/JourneySteps";
 import { JourneyStepCarousel } from "./components/JourneyStepCarousel";
 import NodeBaseAutomation  from "./components/node-base-automation"; // Corrected import
@@ -22,8 +22,6 @@ import { Footer } from "./components/Footer";
 import PhoneFormMockupDeviceFramSet from "./components/PhoneMockUpFormDeviceFrameset";
 
 const App: React.FC = () => {
-
-  const phoneMockupSvgPath = "./assets/phonemockup.svg"; // Path to the phone mockup SVG
 
   return (
     <Router>
