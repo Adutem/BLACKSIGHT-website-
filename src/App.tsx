@@ -42,20 +42,20 @@ const App: React.FC = () => {
         Your Next Business Breakthrough Could Be a Call Away — Meet Nova
       </h2>
 
-      <div
+      {/* <div
   className="overflow-hidden w-full rounded-lg flex items-top justify-center"
   style={{height: "500px" }}
 >
   <PhoneFormMockupDeviceFramSet />
-</div>
+</div> */}
 
 
 
                 {/* <PhoneFormMockup frameSrc="./assets/phonemockup.svg" screenRect={{ topPct: 9, leftPct: 8, widthPct: 92, heightPct: 83 }} /> */}
     </section>
-                <JourneySteps />
+                {/* <JourneySteps /> */}
                 <JourneyStepCarousel />
-                <NodeBaseAutomation /> 
+                {/* <NodeBaseAutomation />  */}
                 <AiAssistantSteps />
                 <AiVoiceHero />
                 <WhyNovaDemo />
