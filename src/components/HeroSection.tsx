@@ -107,26 +107,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     <h1 className="mt-4 text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900"
   >The Leading Customer</h1>
   
-  {/* L2 */}
-  {/* <div className="text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
-  <TypeAnimation
-    sequence={['Service ']}
-    speed={50}
-    wrapper="span"
-    cursor={false}
-    repeat={0}
-  />
-  <TypeAnimation
-    sequence={['AI Platform']}
-    speed={50}
-    wrapper="span"
-    cursor={false}
-    repeat={0}
-    style={{ color: ELECTRIC }}
-    // className="text-primary-1"
-  />
-</div> */}
-
 <div className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900 flex flex-rpw gap-2">
 <h1>Service</h1>
 
@@ -141,7 +121,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           wrapper="span"
           cursor={false}
     style={{ color: ELECTRIC }}
-    repeat={Infinity}
+    repeat={0}
         />
       </span>
     </div>
