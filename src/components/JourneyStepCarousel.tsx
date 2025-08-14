@@ -78,58 +78,59 @@ export const JourneyStepCarousel: React.FC = () => {
 
       <div className="w-full max-w-md sm:max-w-4xl relative">
         {/* Image with text overlay */}
-        <div className="relative rounded-lg shadow-lg overflow-hidden">
+        <div className="relative rounded-lg shadow-lg overflow-hidden ">
           <img
             src={images[activeIndex]}
             alt={`journey-step-${activeIndex}`}
-            className="w-full h-48 sm:h-80 object-cover transition-all duration-700"
+            className="w-full h-64 sm:h-[28rem] object-cover transition-all duration-700"
           />
 
-          {/* Centered Text overlay */}
+          {/* Left-aligned Text overlay with even larger font size */}
           <div
-            className={`absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-center items-center text-center p-4 sm:p-6 transition-transform duration-500 ${
+            className={` absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-center items-start text-left p-4 sm:p-6 transition-transform duration-500 ${
               animate ? '-translate-y-2 opacity-90' : 'translate-y-0 opacity-100'
             }`}
             style={{ willChange: 'transform, opacity' }}
           >
-            <div>
-              <h3 className="text-white font-bold text-xl sm:text-2xl mb-2">
+            <div className='p-20'>
+              <h3 className="text-white font-bold text-3xl sm:text-4xl mb-3">
                 {texts[activeIndex].title}
               </h3>
               {texts[activeIndex].description && (
-                <p className="text-white/90 mb-2 text-sm sm:text-base max-w-lg mx-auto">
+                <p className="text-white/90 mb-3 text-lg sm:text-2xl max-w-2xl">
                   {texts[activeIndex].description}
                 </p>
               )}
               {texts[activeIndex].items && texts[activeIndex].items.length > 0 && (
-                <ul className="space-y-1 max-w-md mx-auto">
+                <ul className="space-y-2 max-w-xl">
                   {texts[activeIndex].items.map((item, idx) => (
                     <li
                       key={idx}
-                      className="text-white/90 text-sm sm:text-base flex items-center"
+                      className="text-white/90 text-lg sm:text-2xl flex items-center"
                     >
-                      <span className="mr-2">•</span>
+                      <span className="mr-3 text-xl sm:text-2xl">•</span>
                       <span>{item}</span>
                     </li>
                   ))}
                 </ul>
               )}
             </div>
+            {/* Dots Navigation - now inside the overlay, bottom left */}
+            <div className="mt-24 absolute left-0 bottom-0 w-full flex justify-center items-end p-6">
+              <div className="flex gap-1 sm:gap-2">
+                {images.map((_, idx) => (
+                  <button
+                    key={idx}
+                    className={`w-2 sm:w-3 h-2 sm:h-3 rounded-full transition ${
+                      idx === activeIndex ? "bg-blue-600" : "bg-gray-300"
+                    }`}
+                    onClick={() => onDotClick(idx)}
+                    aria-label={`Go to image ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-
-        {/* Dots Navigation */}
-        <div className="flex justify-center gap-1 sm:gap-2 mt-3 sm:mt-4">
-          {images.map((_, idx) => (
-            <button
-              key={idx}
-              className={`w-2 sm:w-3 h-2 sm:h-3 rounded-full transition ${
-                idx === activeIndex ? "bg-blue-600" : "bg-gray-300"
-              }`}
-              onClick={() => onDotClick(idx)}
-              aria-label={`Go to image ${idx + 1}`}
-            />
-          ))}
         </div>
       </div>
     </section>
