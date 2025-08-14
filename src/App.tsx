@@ -17,8 +17,7 @@ import { Terms } from "./pages/Terms";
 import FormDemo from "./pages/FormDemo";
 import WhyNovaDemo from "./pages/why-nova-demo";
 import  FaqDemo  from "./pages/carousel-demo"; // Importing the carousel demo
-import JoinCommunitiesDemo from "./pages/join-communities-demo"; // Importing the join communities demo
-import { PhoneFormMockup } from "./components/PhoneFormMockUp";
+import JoinCommunitiesDemo from "./pages/join-communities-demo";
 import { Footer } from "./components/Footer";
 import PhoneFormMockupDeviceFramSet from "./components/PhoneMockUpFormDeviceFrameset";
 
