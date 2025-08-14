@@ -12,7 +12,7 @@ interface PhoneFormMockupDeviceFramSetProps {
 const PhoneFormMockupDeviceFramSet: React.FC<PhoneFormMockupDeviceFramSetProps> = ({
   className,
   onSubmit,
-  maxWidthPx = 380,
+  maxWidthPx = 300,
 }) => {
   const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -42,15 +42,15 @@ const PhoneFormMockupDeviceFramSet: React.FC<PhoneFormMockupDeviceFramSetProps> 
 
 
   return (
-    <div className={className} style={{ maxWidth: maxWidthPx, margin: '0 auto' }}>
-    <div style={{ transform: "scale(0.8)", height: "700px" }}>
-      
-   
-      <DeviceFrameset device="iPhone X" color="black" landscape={false} zoom={0.9}>
+    <div
+  className='justify-center'
+  style={{  margin: '0', paddingLeft: '-10px' }}
+>
+      <DeviceFrameset device="iPhone X" color="black" landscape={false} zoom={1} style={{margin: '0'}}>
         {/* Inner content behaves like a real phone screen */}
         <div style={{ width: '100%', height: '100%', overflow: 'auto', background: '#fff' }}>
           {/* Status Bar */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px' }}>
             <span style={{ fontSize: 12, fontWeight: 600 }}>{currentTime}</span>
             <div style={{ display: 'flex', gap: 6 }}>
               <Signal size={14} /><Wifi size={14} /><Battery size={14} />
@@ -177,7 +177,7 @@ const PhoneFormMockupDeviceFramSet: React.FC<PhoneFormMockupDeviceFramSetProps> 
           </div>
         </div>
       </DeviceFrameset>
-    </div>
+  
     </div>
   );
 };

@@ -104,18 +104,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Headline with typewriter effect */}
          {/* Headline with typewriter effect */}
          <span className="gap-4  mt-4 text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
-    
-  {/* L1 */}
-  <TypeAnimation
-    sequence={['The Leading Customer']}
-    speed={50}
-    wrapper="h1"
-    cursor={false} // disable cursor
-    style={{ display: 'block' }}
-    repeat={0}
-    className="mt-4 text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900"
-  />
-
+    <h1 className="mt-4 text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900"
+  >The Leading Customer</h1>
+  
   {/* L2 */}
   {/* <div className="text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
   <TypeAnimation
@@ -137,20 +128,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 </div> */}
 
 <div className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
-      <TypeAnimation
-        sequence={[
-          "Service ",
-          () => {
-            if (aiRef.current) {
-              aiRef.current.style.visibility = "visible";
-            }
-          }
-        ]}
-        speed={50}
-        wrapper="span"
-        cursor={false}
-        repeat={0}
-      />
+<h1>Service</h1>
 
       <span
         ref={aiRef}
@@ -163,7 +141,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           wrapper="span"
           cursor={false}
     style={{ color: ELECTRIC }}
-    repeat={0}
+    repeat={Infinity}
         />
       </span>
     </div>

@@ -37,13 +37,17 @@ const App: React.FC = () => {
               element={<>
                 <HeroSection />
                 <br />
-                <section className="flex flex-col items-center justify-center min-h-screen bg-white p-4">
+                <section className="flex flex-col items-center justify-center min-h-screen bg-white pt-4">
       <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 max-w-2xl text-gray-800">
         Your Next Business Breakthrough Could Be a Call Away — Meet Nova
       </h2>
 
-
-      <PhoneFormMockupDeviceFramSet />
+      <div
+  className="overflow-hidden w-full rounded-lg flex items-top justify-center"
+  style={{height: "500px" }}
+>
+  <PhoneFormMockupDeviceFramSet />
+</div>
 
 
 
