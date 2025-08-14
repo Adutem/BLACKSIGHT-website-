@@ -209,7 +209,7 @@ className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] f
             key={logo.alt}
             src={logo.src || "/placeholder.svg"}
             alt={logo.alt}
-            className="mx-8 h-6 sm:h-7"
+            className="mx-8 h-8 sm:h-7"
           />
         ))}
       </Marquee>
