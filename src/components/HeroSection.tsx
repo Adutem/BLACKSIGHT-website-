@@ -127,7 +127,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   />
 </div> */}
 
-<div className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
+<div className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900 flex flex-rpw gap-2">
 <h1>Service</h1>
 
       <span
