@@ -189,14 +189,16 @@ className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] f
         </div>
 
         {/* Logos strip with continuous, opposite-direction marquee */}
-        <div className="mt-3 sm:mt-7" role="region" aria-label="Partner logos">
-          <div className="px-4 py-3 sm:px-6 sm:py-4">
+        <div className="flex items-center justify-center w-full"
+  
+        role="region" aria-label="Partner logos">
+          <div className="px-20 py-3 sm:px-6 sm:py-4 w-[70vw]">
 
-          <div className="space-y-6">
+          <div className="space-y-6 items-center justify-center">
       {/* Row 1 - scroll left */}
       <Marquee
         gradient={false}
-        speed={40} // Adjust scroll speed
+        speed={90} // Adjust scroll speed
         pauseOnHover={true}
         direction="left"
       >
@@ -213,7 +215,7 @@ className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] f
       {/* Row 2 - scroll right */}
       <Marquee
         gradient={false}
-        speed={40}
+        speed={90}
         pauseOnHover={true}
         direction="right"
       >
