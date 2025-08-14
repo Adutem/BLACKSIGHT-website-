@@ -27,7 +27,7 @@ export default function JoinCommunities({
 
   return (
     <section className={`w-full bg-white ${className}`}>
-      <div className={`mx-auto max-w-6xl px-4 sm:px-6 ${padY}`}>
+      <div className={`mx-auto max-w-4xl px-4 sm:px-6 ${padY}`}>
         <div className="flex flex-col items-center justify-between gap-3 sm:gap-4 md:flex-row">
           {/* Left: Heading + subtext */}
           <div className="text-center md:text-left">
@@ -40,7 +40,7 @@ export default function JoinCommunities({
           </div>
 
           {/* Right: Icons row */}
-          <ul className="flex items-end gap-4 sm:gap-6">
+          <ul className="flex items-end gap-3 sm:gap-4">
             {communities.map(({ name, href, Icon }) => (
               <li key={name} className="text-center">
                 <a
