@@ -107,13 +107,22 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     <h1 className="mt-4 text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900"
   >The Leading Customer</h1>
   
-<div className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900 flex flex-rpw gap-2">
-<h1>Service</h1>
+<div >
+<h1
+className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
 
-      <span
-        ref={aiRef}
-        style={{ visibility: "hidden" }}
+<span
+        // ref={aiRef}
+        // style={{ visibility: "hidden" }}
         className="text-primary-1"
+      >
+  Service
+  </span>
+
+  <span
+        // ref={aiRef}
+        // style={{ visibility: "hidden" }}
+        className="text-primary-1, pl-8"
       >
         <TypeAnimation
           sequence={["AI Platform"]}
@@ -121,9 +130,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           wrapper="span"
           cursor={false}
     style={{ color: ELECTRIC }}
-    repeat={0}
+    repeat={20}
         />
       </span>
+  </h1>
+
+
     </div>
 
   {/* L3 */}
