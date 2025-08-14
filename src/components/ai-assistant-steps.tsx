@@ -101,7 +101,7 @@ export default function AiAssistantSteps({
   steps = DEFAULT_STEPS,
   title = "How to use AI Assistant",
   // Reduce the default gaps for more equal and less excessive spacing
-  rightColumnOffset = 65, // px, reduced for less vertical gap
+  rightColumnOffset = 36, // px, further reduced for less vertical gap
   rightColumnExtraGap = 0, // px, set to 0 for equal vertical spacing
 }: {
   steps?: Step[]
@@ -116,8 +116,8 @@ export default function AiAssistantSteps({
   const [containerRect, setContainerRect] = useState<DOMRect | null>(null)
 
   // --- CONSTANTS for uniform card sizing ---
-  const CARD_WIDTH = 560; // px, matches md:w-[560px]
-  const CARD_HEIGHT = 140; // px, set a fixed height for all cards
+  const CARD_WIDTH =400; // px, reduced from 560px
+  const CARD_HEIGHT = 88; // px, reduced from 140px
 
   // This offset is used to ensure the arrow head is exactly on the top border of the next card
   // The marker arrow head is about 7px tall, so we subtract 7px from the end Y
@@ -148,7 +148,7 @@ export default function AiAssistantSteps({
     }
   }, [steps.length])
 
-  // Build connectors from each card to the next (from bottom center to top center, arrow head on box line)
+  // Build connectors from the side of one card to the top center of the next card
   const connectors: Connector[] = useMemo(() => {
     if (!containerRect || rects.length < 2) return []
 
@@ -158,30 +158,43 @@ export default function AiAssistantSteps({
       const to = rects[i + 1]
       if (!from?.width || !to?.width) continue
 
-      // Connect from bottom center of current card to top center of next card
-      const fromX = from.left - containerRect.left + from.width / 2
-      const fromY = from.top - containerRect.top + from.height
-
-      const toX = to.left - containerRect.left + to.width / 2
-      // The arrow head should be exactly on the top border of the next card
-      // The marker is about 7px tall, so we subtract 7px from the end Y to place the tip on the border
-      const toY = to.top - containerRect.top + ARROW_MARKER_HEIGHT
-
-      // For a nice curve, use a cubic Bezier with a strong vertical offset
-      // If the cards are on opposite sides, make the curve more pronounced horizontally
+      // Determine which side to start from (right for left card, left for right card)
       const isFromLeft = i % 2 === 0
       const isToLeft = (i + 1) % 2 === 0
-      const horizontalCurve = Math.abs(fromX - toX) * 0.6
-      const verticalCurve = (toY - fromY) * 0.5
 
-      let d: string
-      if (isFromLeft !== isToLeft) {
-        // Curve horizontally and vertically
-        d = `M ${fromX} ${fromY} C ${fromX} ${fromY + verticalCurve}, ${toX} ${toY - verticalCurve}, ${toX} ${toY}`
+      // Start point: right center of left card, or left center of right card
+      const fromX = isFromLeft
+        ? from.left - containerRect.left + from.width // right edge of left card
+        : from.left - containerRect.left // left edge of right card
+      const fromY = from.top - containerRect.top + from.height / 2
+
+      // End point: top center of next card
+      const toX = to.left - containerRect.left + to.width / 2
+      const toY = to.top - containerRect.top + ARROW_MARKER_HEIGHT
+
+      // Control points for a nice curve
+      // We'll curve out horizontally, then up/down to the top of the next card
+      // The horizontal offset is larger for side-to-side, smaller for same-side
+      const horizontalCurve = Math.abs(fromX - toX) * 0.6 + 32
+      const verticalCurve = Math.abs(fromY - toY) * 0.4 + 18
+
+      let c1x, c1y, c2x, c2y
+
+      if (isFromLeft) {
+        // From right edge of left card
+        c1x = fromX + horizontalCurve
+        c1y = fromY
       } else {
-        // Same side, mostly vertical curve
-        d = `M ${fromX} ${fromY} C ${fromX} ${fromY + verticalCurve}, ${toX} ${toY - verticalCurve}, ${toX} ${toY}`
+        // From left edge of right card
+        c1x = fromX - horizontalCurve
+        c1y = fromY
       }
+
+      // The second control point is above the top center of the next card
+      c2x = toX
+      c2y = toY - verticalCurve
+
+      const d = `M ${fromX} ${fromY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${toX} ${toY}`
 
       cs.push({
         fromIdx: i,
@@ -202,16 +215,16 @@ export default function AiAssistantSteps({
 
   return (
     <section className="w-full bg-white">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-        <h2 className="text-center text-3xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <h2 className="text-center text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900">
           {title}
         </h2>
 
         <div
           ref={containerRef}
-          className="relative mt-10 sm:mt-12"
+          className="relative mt-7 sm:mt-8"
           aria-label="AI Assistant setup steps"
-          style={{ paddingBottom: 80 }}
+          style={{ paddingBottom: 48 }}
         >
           {/* Curved connectors (md+) */}
           <svg
@@ -258,7 +271,7 @@ export default function AiAssistantSteps({
           {/* On mobile: single column, on md+: absolute staggered two-column */}
           <div className="relative">
             {/* Mobile: single column */}
-            <div className="md:hidden grid grid-cols-1 gap-y-8">
+            <div className="md:hidden grid grid-cols-1 gap-y-4">
               {steps.map((step, i) => (
                 <div
                   key={i}
@@ -275,25 +288,25 @@ export default function AiAssistantSteps({
                   <div
                     className={[
                       "w-full h-full",
-                      "rounded-2xl border border-dashed border-zinc-200 bg-white",
+                      "rounded-xl border border-dashed border-zinc-200 bg-white",
                       "shadow-sm shadow-zinc-900/5",
-                      "px-6 py-5 sm:px-7 sm:py-6",
+                      "px-4 py-3 sm:px-5 sm:py-4",
                       "transition-all duration-700 ease-out will-change-transform",
                       "transform",
-                      visible[i] ? "opacity-100 translate-x-0" : "opacity-0 translate-y-16",
+                      visible[i] ? "opacity-100 translate-x-0" : "opacity-0 translate-y-10",
                       "flex flex-col justify-center",
                     ].join(" ")}
                     aria-label={`Step ${i + 1}: ${step.title}`}
                   >
-                    <div className="flex items-start gap-4">
-                      <div className={`shrink-0 ${step.iconBg} rounded-xl p-2.5`}>
-                        <step.Icon className={`h-6 w-6 ${step.iconFg}`} aria-hidden="true" />
+                    <div className="flex items-start gap-3">
+                      <div className={`shrink-0 ${step.iconBg} rounded-lg p-2`}>
+                        <step.Icon className={`h-5 w-5 ${step.iconFg}`} aria-hidden="true" />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-xl sm:text-2xl font-semibold text-zinc-900">
+                        <h3 className="text-base sm:text-lg font-semibold text-zinc-900">
                           {step.title}
                         </h3>
-                        <p className="mt-2 text-sm sm:text-[15px] text-zinc-600">
+                        <p className="mt-1 text-xs sm:text-sm text-zinc-600">
                           {step.description}
                         </p>
                       </div>
@@ -309,10 +322,10 @@ export default function AiAssistantSteps({
                 position: "relative",
                 // ----
                 // This is where we set the vertical gap between the boxes on desktop.
-                // The vertical gap is controlled by rightColumnOffset (default 40px).
+                // The vertical gap is controlled by rightColumnOffset (default 36px).
                 // Each card's top = i * (CARD_HEIGHT + rightColumnOffset)
                 // ----
-                minHeight: steps.length * (CARD_HEIGHT + rightColumnOffset) - rightColumnOffset + 40,
+                minHeight: steps.length * (CARD_HEIGHT + rightColumnOffset) - rightColumnOffset + 24,
               }}
             >
               {steps.map((step, i) => {
@@ -325,7 +338,7 @@ export default function AiAssistantSteps({
                 // ----
                 const top = i * (CARD_HEIGHT + rightColumnOffset)
                 const left = isLeft ? 0 : `calc(100% - ${CARD_WIDTH}px)`
-                const initialShift = isLeft ? "-translate-x-16" : "translate-x-16"
+                const initialShift = isLeft ? "-translate-x-10" : "translate-x-10"
 
                 return (
                   <div
@@ -345,9 +358,9 @@ export default function AiAssistantSteps({
                     <div
                       className={[
                         "w-full h-full",
-                        "rounded-2xl border border-dashed border-zinc-200 bg-white",
+                        "rounded-xl border border-dashed border-zinc-200 bg-white",
                         "shadow-sm shadow-zinc-900/5",
-                        "px-6 py-5 sm:px-7 sm:py-6",
+                        "px-4 py-3 sm:px-5 sm:py-4",
                         "transition-all duration-700 ease-out will-change-transform",
                         "transform",
                         visible[i] ? "opacity-100 translate-x-0" : `opacity-0 ${initialShift}`,
@@ -355,15 +368,15 @@ export default function AiAssistantSteps({
                       ].join(" ")}
                       aria-label={`Step ${i + 1}: ${step.title}`}
                     >
-                      <div className="flex items-start gap-4">
-                        <div className={`shrink-0 ${step.iconBg} rounded-xl p-2.5`}>
-                          <step.Icon className={`h-6 w-6 ${step.iconFg}`} aria-hidden="true" />
+                      <div className="flex items-start gap-3">
+                        <div className={`shrink-0 ${step.iconBg} rounded-lg p-2`}>
+                          <step.Icon className={`h-5 w-5 ${step.iconFg}`} aria-hidden="true" />
                         </div>
                         <div className="min-w-0">
-                          <h3 className="text-xl sm:text-2xl font-semibold text-zinc-900">
+                          <h3 className="text-base sm:text-lg font-semibold text-zinc-900">
                             {step.title}
                           </h3>
-                          <p className="mt-2 text-sm sm:text-[15px] text-zinc-600">
+                          <p className="mt-1 text-xs sm:text-sm text-zinc-600">
                             {step.description}
                           </p>
                         </div>
