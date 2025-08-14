@@ -130,7 +130,7 @@ className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] f
   wrapper="span"
   cursor={false}
   style={{ color: ELECTRIC }}
-  repeat={Infinity}
+  repeat={0}
 />
 
       </span>
@@ -147,7 +147,7 @@ className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] f
     speed={50}
     wrapper="span"
     cursor={false}
-  repeat={Infinity}
+  repeat={0}
     
     style={{ color: ELECTRIC }}
     className="mt-4"
