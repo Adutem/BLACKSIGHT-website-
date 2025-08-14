@@ -16,11 +16,11 @@ type JoinCommunitiesProps = {
 }
 
 const DEFAULT_COMMUNITIES: Community[] = [
-  { name: "Telegram", href: "#", Icon: FaTelegram },
-  { name: "X", href: "#", Icon: RiTwitterXFill },
-  { name: "Github", href: "#", Icon: FaGithub },
-  { name: "Facebook", href: "#", Icon: FaFacebookF },
-  { name: "Discord", href: "#", Icon: FaDiscord },
+  { name: "Telegram +", href: "#", Icon: FaTelegram },
+  { name: "X +", href: "#", Icon: RiTwitterXFill },
+  { name: "Github +", href: "#", Icon: FaGithub },
+  { name: "Facebook +", href: "#", Icon: FaFacebookF },
+  { name: "Discord +", href: "#", Icon: FaDiscord },
 ]
 
 export default function JoinCommunities({
