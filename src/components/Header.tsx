@@ -32,7 +32,7 @@ export const Header: React.FC = () => {
     {/* Logo */}
     <Link to="/" className="flex items-center space-x-2">
       <img
-        src="./assets/hbackground.SVG"
+        src="./assets/hbackground.svg"
         alt="Blacksight Logo"
         className="h-10 w-auto object-contain"
       />
