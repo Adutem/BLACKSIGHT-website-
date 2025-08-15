@@ -63,59 +63,60 @@ export const Footer: React.FC = () => {
     <footer
       className="bg-white py-8"
       style={{
-        backgroundImage: "url('./assets/footer-bg.png')", // your background image
+        backgroundImage: "url('./assets/footer-bg.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
       <div className="max-w-6xl mx-auto px-4">
         {/* Upper Footer Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-end mb-6">
+        <div className="flex flex-col gap-8 lg:flex-row lg:justify-between lg:items-end mb-6">
           {/* Left Side - Brand Identity */}
-          <div className="flex items-end gap-4 mt-4 lg:mt-0">
+          <div className="flex items-end gap-4 mt-4 lg:mt-0 justify-center lg:justify-start">
             <img
-              src="./assets/Blacksightbackground.png"
+              src="./assets/hbackground.svg"
               alt="BlackSight"
-              className="h-30 object-contain"
+              className="h-24 object-contain"
             />
           </div>
 
           {/* Middle Section - Navigation Links */}
-          <div className="flex flex-col sm:flex-row gap-9">
+          <div className="flex flex-col sm:flex-row gap-6 sm:gap-9 items-center justify-center">
             <LinkList title="Quick Links" links={quickLinks} />
             <LinkList title="Company" links={companyLinks} />
             <LinkList title="Resources" links={resourceLinks} />
           </div>
 
           {/* Right Side - Social Media */}
-          {/* Right Side - Social Media */}
-<div className="flex items-end">
-  <div className="flex gap-6 text-center">
-    {socialLinks.map(({ href, label, Icon }) => (
-      <a
-        key={href}
-        href={href}
-        className="flex flex-col items-center text-blue-500 hover:text-blue-600 transition-colors"
-      >
-        <Icon className="h-6 w-6 mb-1" />
-        <span className="text-sm text-gray-700">{label}</span>
-      </a>
-    ))}
-  </div>
-</div>
-
+          <div className="flex items-end justify-center lg:justify-end mt-6 lg:mt-0">
+            <div className="flex gap-4 sm:gap-6 text-center">
+              {socialLinks.map(({ href, label, Icon }) => (
+                <a
+                  key={href}
+                  href={href}
+                  className="flex flex-col items-center text-blue-500 hover:text-blue-600 transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                >
+                  <Icon className="h-6 w-6 mb-1" />
+                  <span className="text-xs sm:text-sm text-gray-700">{label}</span>
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Separator Line */}
         <div className="border-t border-black mb-6"></div>
 
         {/* Lower Footer Section */}
-        <div className="flex flex-col sm:flex-row justify-between items-center">
-          <div className="text-sm text-black-600 text-center sm:text-left mb-4 sm:mb-0">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
+          <div className="text-sm text-black-600 text-center sm:text-left mb-2 sm:mb-0">
             <p>Automate your business with the smart Blacksight AI for Business</p>
             <p>Unlock your Business full Potential today</p>
           </div>
-          <div className="text-sm text--600">
+          <div className="text-sm text-black-600 text-center sm:text-right">
             © Copyright Reserved 2025 | Adutem Innovations
           </div>
         </div>
