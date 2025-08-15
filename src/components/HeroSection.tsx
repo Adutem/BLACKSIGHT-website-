@@ -110,10 +110,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   </h1>
 
   {/* Line 2 */}
- <h1 className="mt-2 sm:mt-0 text-3xl sm:text-5xl lg:text-7xl leading-tight sm:leading-snug font-extrabold text-gray-900 flex flex-wrap justify-center gap-0 sm:gap-4">
-  <span className="text-primary-1 sm:mr-2">Service </span>
+  <h1 className="mt-2 sm:mt-0 text-3xl sm:text-5xl lg:text-7xl leading-tight sm:leading-snug font-extrabold text-gray-900 flex flex-wrap justify-center">
+    <span className="text-primary-1">Service</span>
+    <span className="inline-block">&nbsp;</span>
     <TypeAnimation
-      sequence={[" AI Platform"]}
+      sequence={["AI Platform"]}
       speed={50}
       wrapper="span"
       cursor={false}
