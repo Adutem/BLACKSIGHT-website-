@@ -170,16 +170,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
 
         {/* Logos strip with continuous, opposite-direction marquee */}
-        <div className="flex items-center justify-center w-full"
-  
-        role="region" aria-label="Partner logos">
-          <div className="px-20 py-3 sm:px-6 sm:py-4 w-[70vw]">
-
-          <div className="space-y-6 items-center justify-center">
+        <div
+  className="flex items-center justify-center w-full"
+  role="region"
+  aria-label="Partner logos"
+>
+  <div className="sm:px-20 sm:py-3 px-0 py-0 sm:w-[70vw] w-full">
+    <div className="space-y-6 items-center justify-center">
       {/* Row 1 - scroll left */}
       <Marquee
         gradient={false}
-        speed={90} // Adjust scroll speed
+        speed={90}
         pauseOnHover={true}
         direction="left"
       >
@@ -210,11 +211,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         ))}
       </Marquee>
     </div>
+  </div>
+</div>
 
-          </div>
-        </div>
-
-        
       </div>
 
     </section>
