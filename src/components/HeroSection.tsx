@@ -27,13 +27,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   // Electric Blue accent
   const ELECTRIC = "#488ff8"
 
-  
+
 
   // Logos split into two rows
   const row1 = [
     { src: "./assets/stripe.png", alt: "Stripe" },
     { src: "./assets/calendly.png", alt: "Calendly" },
-    { src: "./assets/airtable.png", alt: "Airtable" },
+    { src: "./assets/Group.png", alt: "Airtable" },
     { src: "./assets/Clickup.png", alt: "ClickUp" },
     { src: "./assets/calendar.png", alt: "Calendar" },
    
