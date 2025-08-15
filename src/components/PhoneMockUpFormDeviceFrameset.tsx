@@ -47,9 +47,18 @@ const PhoneFormMockupDeviceFramSet: React.FC<PhoneFormMockupDeviceFramSetProps> 
   style={{  margin: '0', paddingLeft: '-' }}
 >
 
-<div className="w-[320px] sm:w-[375px] md:w-[400px]">
+<div style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+
+
+<DeviceFrameset
+  device="iPhone X"
+  color="black"
+  landscape={false}
+  zoom={window.innerWidth < 500 ? 0.97 : 1}
+  width={window.innerWidth < 500 ? 330 : 375}// Set the width of the device frame
+  style={{ margin: 0 }}
+>
   
-      <DeviceFrameset device="iPhone X" color="black" landscape={false} zoom={1} style={{margin: '0'}}>
         {/* Inner content behaves like a real phone screen */}
         <div style={{ width: '100%', height: '100%', overflow: 'auto', background: '#fff' }}>
           {/* Status Bar */}
