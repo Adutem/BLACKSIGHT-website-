@@ -70,9 +70,9 @@ export const Footer: React.FC = () => {
     >
       <div className="max-w-6xl mx-auto px-4">
         {/* Upper Footer Section */}
-        <div className="flex flex-col gap-8 lg:flex-row lg:justify-between lg:items-end mb-6">
+        <div className="flex flex-col gap-8 lg:flex-row lg:justify-between lg:items-start mb-6">
           {/* Left Side - Brand Identity */}
-          <div className="flex items-end gap-4 mt-4 lg:mt-0 justify-center lg:justify-start">
+          <div className="flex items-start gap-4 mt-4 lg:mt-0 justify-start w-full lg:w-auto">
             <img
               src="./assets/hbackground.svg"
               alt="BlackSight"
@@ -81,15 +81,15 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Middle Section - Navigation Links */}
-          <div className="flex flex-col sm:flex-row gap-6 sm:gap-9 items-center justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 sm:gap-9 items-start justify-start w-full lg:w-auto">
             <LinkList title="Quick Links" links={quickLinks} />
             <LinkList title="Company" links={companyLinks} />
             <LinkList title="Resources" links={resourceLinks} />
           </div>
 
           {/* Right Side - Social Media */}
-          <div className="flex items-end justify-center lg:justify-end mt-6 lg:mt-0">
-            <div className="flex gap-4 sm:gap-6 text-center">
+          <div className="flex items-start sm:w-full justify-start mt-6 lg:mt-0 w-full lg:w-auto">
+            <div className="flex gap-4 sm:gap-10 text-center">
               {socialLinks.map(({ href, label, Icon }) => (
                 <a
                   key={href}
