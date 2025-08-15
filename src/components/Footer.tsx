@@ -88,13 +88,13 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Right Side - Social Media */}
-          <div className="flex items-start sm:w-full justify-start mt-6 lg:mt-0 w-full lg:w-auto">
-            <div className="flex gap-4 sm:gap-10 text-center">
+          <div className="flex items-start w-full justify-start mt-6 lg:mt-0 lg:w-auto">
+            <div className="flex gap-4 sm:gap-10 text-center w-full">
               {socialLinks.map(({ href, label, Icon }) => (
                 <a
                   key={href}
                   href={href}
-                  className="flex flex-col items-center text-blue-500 hover:text-blue-600 transition-colors"
+                  className="flex flex-col items-center text-blue-500 hover:text-blue-600 transition-colors w-full"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
