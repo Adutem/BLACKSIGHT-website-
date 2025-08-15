@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
     </Link>
 
     {/* Desktop Nav */}
-    <nav className="hidden md:flex items-center gap-6">
+    <nav className="hidden md:flex items-center gap-20">
       {links.map((l) => (
         <NavLink
           key={l.to}
