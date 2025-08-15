@@ -5,41 +5,26 @@ type AiVoiceHeroProps = {
   headline?: string;
   subline?: string;
   buttonLabel?: string;
-  speechText?: string;
-  lang?: string;
+  audioSrc?: string; // mp3 file url
 };
 
-/**
- * AiVoiceHero
- * - Plain React + Tailwind component that matches the provided design.
- * - Uses the Web Speech API (speechSynthesis) to play a short demo message.
- * - Canvas-based dotted waveform animation. During speaking, the animation intensifies.
- *
- * Requirements:
- * - Tailwind CSS available in your app.
- * - Optional: lucide-react for icons: npm i lucide-react
- *
- * Usage:
- *   <AiVoiceHero />
- */
 export default function AiVoiceHero({
   headline = "Nova Increased Customer Interaction by 60%",
   subline = "Supports Multiple Languages Available 24/7",
   buttonLabel = "Listen to AI demo test",
-  speechText = "Hello! I am your AI assistant. I can speak multiple languages and I am available twenty four seven. How can I help you today?",
-  lang = "en-US",
+  audioSrc = "./assets/voiceDemo.mp3", // default mp3 path
 }: AiVoiceHeroProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const utterRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [charIndex, setCharIndex] = useState(0);
-  const [totalChars, setTotalChars] = useState(0);
-  const [speechSupported, setSpeechSupported] = useState<boolean>(
-    () => typeof window !== "undefined" && "speechSynthesis" in window
+  const [progress, setProgress] = useState(0); // 0-1
+  const [duration, setDuration] = useState(0);
+  const [audioSupported, setAudioSupported] = useState<boolean>(
+    () => typeof window !== "undefined" && !!window.Audio
   );
 
   const reducedMotion = useMemo(
@@ -50,116 +35,88 @@ export default function AiVoiceHero({
     []
   );
 
-  // Load voices (Chrome loads them asynchronously)
+  // Audio event handlers
   useEffect(() => {
-    const loadVoices = () => {
-      const v = window.speechSynthesis?.getVoices?.() ?? [];
-      setVoices(v);
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handlePlay = () => {
+      setIsPlaying(true);
+      setIsPaused(false);
     };
-    loadVoices();
-    if (typeof window !== "undefined") {
-      window.speechSynthesis?.addEventListener?.("voiceschanged", loadVoices);
-      return () =>
-        window.speechSynthesis?.removeEventListener?.("voiceschanged", loadVoices);
-    }
+    const handlePause = () => {
+      setIsPaused(true);
+      setIsPlaying(false);
+    };
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setIsPaused(false);
+      setProgress(1);
+    };
+    const handleTimeUpdate = () => {
+      if (audio.duration > 0) {
+        setProgress(audio.currentTime / audio.duration);
+      }
+    };
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+    };
+
+    audio.addEventListener("play", handlePlay);
+    audio.addEventListener("pause", handlePause);
+    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    return () => {
+      audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("pause", handlePause);
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
   }, []);
 
-  // Cleanup speech synthesis on unmount
+  // Stop audio on unmount
   useEffect(() => {
     return () => {
       try {
-        window.speechSynthesis?.cancel();
+        audioRef.current?.pause();
+        audioRef.current && (audioRef.current.currentTime = 0);
       } catch {}
     };
   }, []);
 
-  // Pick a voice matching preferred lang when possible
-  const pickVoice = () => {
-    if (!voices.length) return null;
-    const exact = voices.find((v) => v.lang?.toLowerCase() === lang.toLowerCase());
-    if (exact) return exact;
-    const base = lang.split("-")[0].toLowerCase();
-    const partial = voices.find((v) => v.lang?.toLowerCase().startsWith(base));
-    return partial ?? voices[0];
-  };
-
-  // Speech synthesis handler
-  function startSpeech() {
-    if (!speechSupported) return;
-    window.speechSynthesis.cancel();
-
-    const text = speechText;
-    const utter = new SpeechSynthesisUtterance(text);
-    utterRef.current = utter;
-
-    const voice = pickVoice();
-    if (voice) utter.voice = voice;
-    utter.lang = voice?.lang ?? lang;
-    utter.rate = 1.0;
-    utter.pitch = 1.0;
-    utter.volume = 1.0;
-
-    setTotalChars(text.length);
-    setCharIndex(0);
-
-    utter.onstart = () => {
-      setIsSpeaking(true);
-      setIsPaused(false);
-    };
-    utter.onboundary = (e: SpeechSynthesisEvent) => {
-      if (typeof e.charIndex === "number") {
-        setCharIndex(e.charIndex);
-      }
-    };
-    utter.onpause = () => setIsPaused(true);
-    utter.onresume = () => setIsPaused(false);
-    utter.onerror = () => {
-      setIsSpeaking(false);
-      setIsPaused(false);
-      utterRef.current = null;
-    };
-    utter.onend = () => {
-      setIsSpeaking(false);
-      setIsPaused(false);
-      utterRef.current = null;
-      setCharIndex(totalChars);
-    };
-
-    window.speechSynthesis.speak(utter);
-  }
-
   function handleTogglePlay() {
-    if (!speechSupported) return;
+    if (!audioSupported) return;
+    const audio = audioRef.current;
+    if (!audio) return;
 
-    if (!isSpeaking) {
-      startSpeech();
+    if (!isPlaying && !isPaused) {
+      audio.currentTime = 0;
+      audio.play();
       return;
     }
-
-    if (isSpeaking && !isPaused) {
-      try {
-        window.speechSynthesis.pause();
-        setIsPaused(true);
-      } catch {}
+    if (isPlaying && !isPaused) {
+      audio.pause();
+      setIsPaused(true);
       return;
     }
-
-    if (isSpeaking && isPaused) {
-      try {
-        window.speechSynthesis.resume();
-        setIsPaused(false);
-      } catch {}
+    if (!isPlaying && isPaused) {
+      audio.play();
+      setIsPaused(false);
       return;
     }
   }
 
   function handleStop() {
-    try {
-      window.speechSynthesis.cancel();
-    } catch {}
-    setIsSpeaking(false);
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.currentTime = 0;
+    setIsPlaying(false);
     setIsPaused(false);
-    utterRef.current = null;
+    setProgress(0);
   }
 
   // Canvas dotted waveform animation
@@ -271,7 +228,7 @@ export default function AiVoiceHero({
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, width, height);
 
-      const speed = (reducedMotion ? 0 : baseSpeed) + (isSpeaking && !isPaused ? speakBoost : 0);
+      const speed = (reducedMotion ? 0 : baseSpeed) + (isPlaying && !isPaused ? speakBoost : 0);
       t += speed;
 
       for (let i = 0; i < columns; i++) {
@@ -284,7 +241,7 @@ export default function AiVoiceHero({
           Math.sin((xNorm * 12 - t * 1.2) * Math.PI) * 0.25 +
           Math.sin((xNorm * 20 + t * 0.7) * Math.PI) * 0.2;
 
-        const speakingAmp = isSpeaking ? 1.0 : 0.7;
+        const speakingAmp = isPlaying ? 1.0 : 0.7;
         const amp = Math.max(0.02, Math.abs(wave) * env * speakingAmp);
 
         const dotsInColumn = Math.max(4, Math.floor(amp * verticalDots) + 6);
@@ -302,7 +259,7 @@ export default function AiVoiceHero({
           const size =
             radiusBase *
             (1 + 0.8 * Math.cos(rel * Math.PI)) *
-            (0.9 + (isSpeaking ? 0.25 : 0.0) * Math.sin(t * 2 + i * 0.08));
+            (0.9 + (isPlaying ? 0.25 : 0.0) * Math.sin(t * 2 + i * 0.08));
 
           const yOffset = (j - (dotsInColumn - 1) / 2) * spacing;
           const y = centerY + yOffset;
@@ -322,7 +279,15 @@ export default function AiVoiceHero({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (resizeObserverRef.current) resizeObserverRef.current.disconnect();
     };
-  }, [isSpeaking, isPaused, reducedMotion]);
+  }, [isPlaying, isPaused, reducedMotion]);
+
+  // Format time for display
+  function formatTime(sec: number) {
+    if (!isFinite(sec)) return "0:00";
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  }
 
   return (
     <section className="w-full bg-white">
@@ -362,20 +327,20 @@ export default function AiVoiceHero({
                 "shadow-sm shadow-blue-600/30 hover:bg-blue-700 active:bg-blue-700",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
                 "transition-colors",
-                !speechSupported ? "opacity-60 cursor-not-allowed" : "",
+                !audioSupported ? "opacity-60 cursor-not-allowed" : "",
               ].join(" ")}
-              aria-pressed={isSpeaking && !isPaused}
-              disabled={!speechSupported}
+              aria-pressed={isPlaying && !isPaused}
+              disabled={!audioSupported}
             >
-              {(!isSpeaking || isPaused) ? (
+              {(!isPlaying || isPaused) ? (
                 <Play className="h-4 w-4" aria-hidden="true" />
               ) : (
                 <Pause className="h-4 w-4" aria-hidden="true" />
               )}
-              {(!isSpeaking || isPaused) ? (isPaused ? "Resume demo" : buttonLabel) : "Pause demo"}
+              {(!isPlaying || isPaused) ? (isPaused ? "Resume demo" : buttonLabel) : "Pause demo"}
             </button>
 
-            {isSpeaking && (
+            {(isPlaying || isPaused) && (
               <button
                 type="button"
                 onClick={handleStop}
@@ -387,29 +352,48 @@ export default function AiVoiceHero({
             )}
           </div>
 
-          {isSpeaking && (
+          {(isPlaying || isPaused || progress > 0) && (
             <div className="w-full max-w-md">
               <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
                 <div
                   className="h-full rounded-full bg-blue-500 transition-[width] duration-200"
-                  style={{ width: totalChars > 0 ? `${Math.min(100, Math.round((charIndex / totalChars) * 100))}%` : "0%" }}
+                  style={{ width: `${Math.min(100, Math.round(progress * 100))}%` }}
                 />
               </div>
               <div className="mt-1 text-center text-xs text-gray-500" aria-live="polite">
-                {isPaused ? "Paused" : "Speaking…"}
+                {isPaused
+                  ? "Paused"
+                  : isPlaying
+                  ? "Playing…"
+                  : progress === 1
+                  ? "Finished"
+                  : ""}
+                {duration > 0 && (
+                  <span className="ml-2">
+                    {formatTime(progress * duration)} / {formatTime(duration)}
+                  </span>
+                )}
               </div>
             </div>
           )}
 
-          {!speechSupported && (
-            <p className="text-xs text-red-600">Speech synthesis is not supported in this browser.</p>
+          {!audioSupported && (
+            <p className="text-xs text-red-600">Audio playback is not supported in this browser.</p>
           )}
         </div>
 
+        <audio
+          ref={audioRef}
+          src={audioSrc}
+          preload="auto"
+          aria-hidden="true"
+          tabIndex={-1}
+        />
+
         <p className="sr-only" aria-live="polite">
-          {!speechSupported
-            ? "Speech not supported."
-            : isSpeaking
+          {!audioSupported
+            ? "Audio not supported."
+            : isPlaying
             ? isPaused
               ? "AI demo is paused."
               : "AI demo is playing."
