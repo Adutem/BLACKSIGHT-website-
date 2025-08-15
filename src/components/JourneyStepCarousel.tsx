@@ -74,54 +74,55 @@ export const JourneyStepCarousel: React.FC = () => {
   return (
     <section className="flex flex-col items-center justify-center py-6 sm:py-10 bg-white">
       {/* Main Title */}
-      <h2 className="text-3xl font-bold mb-6 text-gray-900">Key  Features Of Blacksight  AI</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-gray-900 text-center px-2">Key Features Of Blacksight AI</h2>
 
-      <div className="w-full max-w-md sm:max-w-4xl relative">
+      <div className="w-full max-w-full sm:max-w-4xl relative px-0 sm:px-4">
         {/* Image with text overlay */}
-        <div className="relative rounded-lg shadow-lg overflow-hidden ">
+        <div className="relative rounded-lg shadow-lg overflow-hidden">
           <img
             src={images[activeIndex]}
             alt={`journey-step-${activeIndex}`}
-            className="w-full h-64 sm:h-[28rem] object-cover transition-all duration-700"
+            // Increased mobile height from h-56 to h-80 (20rem), sm: remains the same
+            className="w-full h-80 sm:h-[28rem] object-cover transition-all duration-700"
           />
 
-          {/* Left-aligned Text overlay with even larger font size */}
+          {/* Responsive Text overlay */}
           <div
-            className={` absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-center items-start text-left p-4 sm:p-6 transition-transform duration-500 ${
+            className={`absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end sm:justify-center items-start text-left p-4 sm:p-10 transition-transform duration-500 ${
               animate ? '-translate-y-2 opacity-90' : 'translate-y-0 opacity-100'
             }`}
             style={{ willChange: 'transform, opacity' }}
           >
-            <div className='p-20'>
-              <h3 className="text-white font-bold text-3xl sm:text-4xl mb-3">
+            <div className="w-full sm:w-auto bg-black/40 sm:bg-transparent rounded-lg sm:rounded-none p-4 sm:p-0 mb-4 sm:mb-0">
+              <h3 className="text-white font-bold text-xl sm:text-4xl mb-2 sm:mb-3">
                 {texts[activeIndex].title}
               </h3>
               {texts[activeIndex].description && (
-                <p className="text-white/90 mb-3 text-lg sm:text-2xl max-w-2xl">
+                <p className="text-white/90 mb-2 sm:mb-3 text-sm sm:text-2xl max-w-full sm:max-w-2xl">
                   {texts[activeIndex].description}
                 </p>
               )}
               {texts[activeIndex].items && texts[activeIndex].items.length > 0 && (
-                <ul className="space-y-2 max-w-xl">
+                <ul className="space-y-1 sm:space-y-2 max-w-full sm:max-w-xl">
                   {texts[activeIndex].items.map((item, idx) => (
                     <li
                       key={idx}
-                      className="text-white/90 text-lg sm:text-2xl flex items-center"
+                      className="text-white/90 text-sm sm:text-2xl flex items-center"
                     >
-                      <span className="mr-3 text-xl sm:text-2xl">•</span>
+                      <span className="mr-2 sm:mr-3 text-lg sm:text-2xl">•</span>
                       <span>{item}</span>
                     </li>
                   ))}
                 </ul>
               )}
             </div>
-            {/* Dots Navigation - now inside the overlay, bottom left */}
-            <div className="mt-24 absolute left-0 bottom-0 w-full flex justify-center items-end p-6">
-              <div className="flex gap-1 sm:gap-2">
+            {/* Dots Navigation - always visible, responsive spacing */}
+            <div className="w-full flex justify-center items-end pt-2 sm:pt-8 pb-1 sm:pb-6">
+              <div className="flex gap-2 sm:gap-3">
                 {images.map((_, idx) => (
                   <button
                     key={idx}
-                    className={`w-2 sm:w-3 h-2 sm:h-3 rounded-full transition ${
+                    className={`w-2.5 sm:w-3.5 h-2.5 sm:h-3.5 rounded-full transition ${
                       idx === activeIndex ? "bg-blue-600" : "bg-gray-300"
                     }`}
                     onClick={() => onDotClick(idx)}
