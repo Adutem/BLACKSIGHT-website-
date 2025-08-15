@@ -44,8 +44,11 @@ const PhoneFormMockupDeviceFramSet: React.FC<PhoneFormMockupDeviceFramSetProps> 
   return (
     <div
   className='justify-center'
-  style={{  margin: '0', paddingLeft: '-10px' }}
+  style={{  margin: '0', paddingLeft: '-' }}
 >
+
+<div className="w-[320px] sm:w-[375px] md:w-[400px]">
+  
       <DeviceFrameset device="iPhone X" color="black" landscape={false} zoom={1} style={{margin: '0'}}>
         {/* Inner content behaves like a real phone screen */}
         <div style={{ width: '100%', height: '100%', overflow: 'auto', background: '#fff' }}>
@@ -177,7 +180,7 @@ const PhoneFormMockupDeviceFramSet: React.FC<PhoneFormMockupDeviceFramSetProps> 
           </div>
         </div>
       </DeviceFrameset>
-  
+  </div>
     </div>
   );
 };
