@@ -103,58 +103,37 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
           {/* Headline with typewriter effect */}
          {/* Headline with typewriter effect */}
-         <span className="gap-4  mt-4 text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
-    <h1 className="mt-4 text-4xl sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900"
-  >The Leading Customer</h1>
-  
-<div >
-<h1
-className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
-
-<span
-        // ref={aiRef}
-        // style={{ visibility: "hidden" }}
-        className="text-primary-1"
-      >
-  Service
-  </span>
-
-  <span
-        // ref={aiRef}
-        // style={{ visibility: "hidden" }}
-        className="text-primary-1, pl-8"
-      >
-        <TypeAnimation
-  sequence={["AI Platform"]}
-  speed={50}
-  wrapper="span"
-  cursor={false}
-  style={{ color: ELECTRIC }}
-  repeat={0}
-/>
-
-      </span>
+         <div className="text-center px-4">
+  {/* Line 1 */}
+  <h1 className="mt-4 text-3xl sm:text-5xl lg:text-7xl leading-tight sm:leading-snug font-extrabold text-gray-900">
+    The Leading Customer
   </h1>
 
+  {/* Line 2 */}
+ <h1 className="mt-2 sm:mt-0 text-3xl sm:text-5xl lg:text-7xl leading-tight sm:leading-snug font-extrabold text-gray-900 flex flex-wrap justify-center gap-0 sm:gap-4">
+  <span className="text-primary-1">Service </span>
+    <TypeAnimation
+      sequence={[" AI Platform"]}
+      speed={50}
+      wrapper="span"
+      cursor={false}
+      style={{ color: ELECTRIC }}
+      repeat={1}
+    />
+  </h1>
 
-    </div>
-
-  {/* L3 */}
-<div className="text-4xl mt-4 sm:text-6xl lg:text-7xl leading-snug sm:leading-[1.2] font-extrabold text-gray-900">
-  
-  <TypeAnimation
-    sequence={['for Creators']}
-    speed={50}
-    wrapper="span"
-    cursor={false}
-  repeat={0}
-    
-    style={{ color: ELECTRIC }}
-    className="mt-4"
-  />
-
-  </div>
-</span>
+  {/* Line 3 */}
+  <h2 className="mt-2 sm:mt-0 text-2xl sm:text-4xl lg:text-6xl leading-tight sm:leading-snug font-extrabold">
+    <TypeAnimation
+      sequence={["for Creators"]}
+      speed={50}
+      wrapper="span"
+      cursor={false}
+      repeat={0}
+      style={{ color: ELECTRIC }}
+    />
+  </h2>
+</div>
 
 
 
