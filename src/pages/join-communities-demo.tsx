@@ -23,12 +23,14 @@ export default function JoinCommunities({
   className = "",
   compact = true,
 }: JoinCommunitiesProps) {
-  const padY = compact ? "py-4 sm:py-5" : "py-6"
+  const padY = compact ? "py-2 sm:py-2" : "py-2"
 
   return (
-    <section className={`w-full bg-white ${className}`}>
-      <div className={`mx-auto max-w-4xl px-4 sm:px-6 ${padY}`}>
-        <div className="flex flex-col items-center gap-4 md:flex-row md:justify-between">
+    <section
+      className={`w-full bg-white  flex items-center justify-center ${className}`}
+    >
+      <div className={`mx-auto max-w-4xl px-4 sm:px-6 w-full ${padY}`}>
+        <div className="flex flex-col items-center gap-4 md:flex-row md:items-center md:gap-8 justify-center">
           {/* Left: Heading */}
           <div className="text-center md:text-left">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900">
