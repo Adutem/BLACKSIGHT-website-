@@ -1,15 +1,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { UserPlus, BookMarked, Bot, Plug, Boxes, type LucideIcon } from 'lucide-react';
 
-/**
- * AiAssistantSteps
- * - Alternating two-column timeline: left, right, left, right, ...
- * - "Create an Agent" is top left, "Add Knowledge Base" is below it on the right, etc.
- * - Right side boxes are dropped down and far from the left, creating a staggered, spaced timeline.
- * - Curved SVG connectors between cards, connecting the actual centers of the boxes.
- * - Scroll animations: cards slide in from their side; connectors follow.
- */
-
+// --- Types and Constants ---
 type Step = {
   title: string
   description: string
@@ -56,7 +48,7 @@ const DEFAULT_STEPS: Step[] = [
   },
 ]
 
-// Observe visibility per element to drive enter/leave animations
+// --- Hooks ---
 function useVisibility(count: number, threshold = 0.25) {
   const refs = useRef<(HTMLDivElement | null)[]>([])
   const [visible, setVisible] = useState<boolean[]>(Array(count).fill(false))
@@ -65,7 +57,7 @@ function useVisibility(count: number, threshold = 0.25) {
     const elements = refs.current.filter(Boolean) as HTMLDivElement[]
     if (!elements.length) return
 
-    const observer = new IntersectionObserver(
+    const observer = new window.IntersectionObserver(
       (entries) => {
         setVisible((prev) => {
           const next = [...prev]
@@ -90,6 +82,80 @@ function useVisibility(count: number, threshold = 0.25) {
   return { refs, visible }
 }
 
+// --- Utility: useMediaQuery ---
+function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(() => typeof window !== "undefined" ? window.matchMedia(query).matches : false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) setMatches(media.matches);
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+    // eslint-disable-next-line
+  }, [query]);
+
+  return matches;
+}
+
+// --- Mobile Steps Component ---
+function MobileSteps({
+  steps,
+  cardRefs,
+  // visible,
+}: {
+  steps: Step[]
+  cardRefs: React.MutableRefObject<(HTMLDivElement | null)[]>
+  // visible: boolean[]
+}) {
+  return (
+    <div className="flex flex-col gap-y-4 w-full">
+      {steps.map((step, i) => (
+        <div
+          key={i}
+          ref={el => { cardRefs.current[i] = el; }}
+          data-index={i}
+          className="flex w-full"
+          style={{
+            width: "100%",
+            minWidth: 0,
+          }}
+        >
+          <div
+            className={[
+              "w-full",
+              "rounded-xl border border-dashed border-zinc-200 bg-white",
+              "shadow-sm shadow-zinc-900/5",
+              "px-4 py-3",
+              "transition-all duration-700 ease-out will-change-transform",
+              "transform",
+              // visible[i] ? "opacity-100 translate-x-0" : "opacity-0 translate-y-10",
+              "flex flex-col justify-center",
+            ].join(" ")}
+            aria-label={`Step ${i + 1}: ${step.title}`}
+          >
+            <div className="flex items-start gap-3">
+              <div className={`shrink-0 ${step.iconBg} rounded-lg p-2`}>
+                <step.Icon className={`h-5 w-5 ${step.iconFg}`} aria-hidden="true" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-base font-semibold text-zinc-900">
+                  {step.title}
+                </h3>
+                <p className="mt-1 text-xs text-zinc-600">
+                  {step.description}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// --- Desktop/Tablet Steps Component ---
 type Connector = {
   fromIdx: number
   toIdx: number
@@ -97,39 +163,41 @@ type Connector = {
   animateWithIndex: number
 }
 
-export default function AiAssistantSteps({
-  steps = DEFAULT_STEPS,
-  title = "How to use AI Assistant",
-  // Reduce the default gaps for more equal and less excessive spacing
-  rightColumnOffset = 36, // px, further reduced for less vertical gap
-  rightColumnExtraGap = 0, // px, set to 0 for equal vertical spacing
+function DesktopSteps({
+  steps,
+  cardRefs,
+  visible,
+  containerRef,
+  rightColumnOffset,
+  CARD_WIDTH,
+  CARD_HEIGHT,
+  ARROW_MARKER_HEIGHT,
 }: {
-  steps?: Step[]
-  title?: string
-  rightColumnOffset?: number
-  rightColumnExtraGap?: number
+  steps: Step[]
+  cardRefs: React.MutableRefObject<(HTMLDivElement | null)[]>
+  visible: boolean[]
+  containerRef: React.RefObject<HTMLDivElement>
+  rightColumnOffset: number
+  CARD_WIDTH: number
+  CARD_HEIGHT: number
+  ARROW_MARKER_HEIGHT: number
 }) {
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const { refs: cardRefs, visible } = useVisibility(steps.length)
-
   const [rects, setRects] = useState<DOMRect[]>([])
   const [containerRect, setContainerRect] = useState<DOMRect | null>(null)
 
-  // --- CONSTANTS for uniform card sizing ---
-  const CARD_WIDTH =400; // px, reduced from 560px
-  const CARD_HEIGHT = 88; // px, reduced from 140px
-
-  // This offset is used to ensure the arrow head is exactly on the top border of the next card
-  // The marker arrow head is about 7px tall, so we subtract 7px from the end Y
-  const ARROW_MARKER_HEIGHT = 7; // px, matches markerHeight in SVG marker
-
-  // Measure card and container rects to build connectors
+  // Only measure for desktop (md+) to avoid issues on mobile
   useLayoutEffect(() => {
+    const isDesktop = () => window.innerWidth >= 768;
     const measure = () => {
+      if (!isDesktop()) {
+        setContainerRect(null);
+        setRects([]);
+        return;
+      }
       const container = containerRef.current
       if (!container) return
       setContainerRect(container.getBoundingClientRect())
-      const rs: DOMRect[] = steps.map((_, i) => cardRefs.current[i]?.getBoundingClientRect() ?? new DOMRect())
+      const rs: DOMRect[] = steps.map((_, i) => cardRefs.current[i]?.getBoundingClientRect() ?? new window.DOMRect())
       setRects(rs)
     }
 
@@ -146,7 +214,7 @@ export default function AiAssistantSteps({
       window.removeEventListener("resize", onResize)
       ro?.disconnect?.()
     }
-  }, [steps.length])
+  }, [steps.length, containerRef, cardRefs])
 
   // Build connectors from the side of one card to the top center of the next card
   const connectors: Connector[] = useMemo(() => {
@@ -158,39 +226,29 @@ export default function AiAssistantSteps({
       const to = rects[i + 1]
       if (!from?.width || !to?.width) continue
 
-      // Determine which side to start from (right for left card, left for right card)
       const isFromLeft = i % 2 === 0
-      const isToLeft = (i + 1) % 2 === 0
 
-      // Start point: right center of left card, or left center of right card
       const fromX = isFromLeft
-        ? from.left - containerRect.left + from.width // right edge of left card
-        : from.left - containerRect.left // left edge of right card
+        ? from.left - containerRect.left + from.width
+        : from.left - containerRect.left
       const fromY = from.top - containerRect.top + from.height / 2
 
-      // End point: top center of next card
       const toX = to.left - containerRect.left + to.width / 2
       const toY = to.top - containerRect.top + ARROW_MARKER_HEIGHT
 
-      // Control points for a nice curve
-      // We'll curve out horizontally, then up/down to the top of the next card
-      // The horizontal offset is larger for side-to-side, smaller for same-side
       const horizontalCurve = Math.abs(fromX - toX) * 0.6 + 32
       const verticalCurve = Math.abs(fromY - toY) * 0.4 + 18
 
       let c1x, c1y, c2x, c2y
 
       if (isFromLeft) {
-        // From right edge of left card
         c1x = fromX + horizontalCurve
         c1y = fromY
       } else {
-        // From left edge of right card
         c1x = fromX - horizontalCurve
         c1y = fromY
       }
 
-      // The second control point is above the top center of the next card
       c2x = toX
       c2y = toY - verticalCurve
 
@@ -204,14 +262,138 @@ export default function AiAssistantSteps({
       })
     }
     return cs
-  }, [containerRect, rects])
+  }, [containerRect, rects, ARROW_MARKER_HEIGHT])
 
-  // For alternating left/right, we want:
-  // 0: left, 1: right, 2: left, 3: right, ...
-  // So: isLeft = i % 2 === 0
+  return (
+    <div
+      ref={containerRef}
+      className="relative mt-7 sm:mt-8"
+      aria-label="AI Assistant setup steps"
+      style={{ paddingBottom: 48 }}
+    >
+      {/* Curved connectors (md+) */}
+      <svg
+        className="pointer-events-none absolute inset-0"
+        width="100%"
+        height="100%"
+        viewBox={`0 0 ${containerRect?.width ?? 0} ${containerRect?.height ?? 0}`}
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <marker id="arrow-gray-200" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,7 L7,3.5 z" fill="#e5e7eb"></path>
+          </marker>
+        </defs>
+        {connectors.map((c, idx) => {
+          const active = visible[c.animateWithIndex]
+          const opacity = active ? 1 : 0
+          return (
+            <g
+              key={idx}
+              style={{
+                transition: "opacity 700ms ease-out",
+                opacity,
+              }}
+            >
+              <path
+                d={c.d}
+                fill="none"
+                stroke="#e5e7eb"
+                strokeWidth={2}
+                markerEnd="url(#arrow-gray-200)"
+              />
+            </g>
+          )
+        })}
+      </svg>
+      {/* Cards grid */}
+      <div className="relative">
+        <div
+          style={{
+            position: "relative",
+            minHeight: steps.length * (CARD_HEIGHT + rightColumnOffset) - rightColumnOffset + 24,
+          }}
+        >
+          {steps.map((step, i) => {
+            const isLeft = i % 2 === 0
+            const top = i * (CARD_HEIGHT + rightColumnOffset)
+            const left = isLeft ? 0 : `calc(100% - ${CARD_WIDTH}px)`
+            const initialShift = isLeft ? "-translate-x-10" : "translate-x-10"
 
-  // We'll use absolute positioning for md+ screens to allow equal vertical gaps between left/right
-  // On mobile, fallback to a single column
+            return (
+              <div
+                key={i}
+                ref={el => { cardRefs.current[i] = el; }}
+                data-index={i}
+                className="absolute"
+                style={{
+                  top,
+                  left,
+                  width: CARD_WIDTH,
+                  height: CARD_HEIGHT,
+                  minWidth: 0,
+                  zIndex: 2,
+                }}
+              >
+                <div
+                  className={[
+                    "w-full h-full",
+                    "rounded-xl border border-dashed border-zinc-200 bg-white",
+                    "shadow-sm shadow-zinc-900/5",
+                    "px-4 py-3 sm:px-5 sm:py-4",
+                    "transition-all duration-700 ease-out will-change-transform",
+                    "transform",
+                    visible[i] ? "opacity-100 translate-x-0" : `opacity-0 ${initialShift}`,
+                    "flex flex-col justify-center",
+                  ].join(" ")}
+                  aria-label={`Step ${i + 1}: ${step.title}`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className={`shrink-0 ${step.iconBg} rounded-lg p-2`}>
+                      <step.Icon className={`h-5 w-5 ${step.iconFg}`} aria-hidden="true" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-base sm:text-lg font-semibold text-zinc-900">
+                        {step.title}
+                      </h3>
+                      <p className="mt-1 text-xs sm:text-sm text-zinc-600">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Main Component ---
+export default function AiAssistantSteps({
+  steps = DEFAULT_STEPS,
+  title = "How to use AI Assistant",
+  rightColumnOffset = 36,
+  rightColumnExtraGap = 0,
+}: {
+  steps?: Step[]
+  title?: string
+  rightColumnOffset?: number
+  rightColumnExtraGap?: number
+}) {
+  // Shared refs and visibility for both mobile and desktop
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const { refs: cardRefs, visible } = useVisibility(steps.length)
+
+  // Constants for desktop layout
+  const CARD_WIDTH = 400; // px
+  const CARD_HEIGHT = 88; // px
+  const ARROW_MARKER_HEIGHT = 7; // px
+
+  // Responsive: show mobile or desktop/tablet
+  const isDesktopOrTablet = useMediaQuery("(min-width: 768px)");
 
   return (
     <section className="w-full bg-white">
@@ -219,176 +401,31 @@ export default function AiAssistantSteps({
         <h2 className="text-center text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900">
           {title}
         </h2>
+        <div>
+  {/* Mobile version (only visible below md) */}
+  <div className="block md:hidden">
+    <MobileSteps
+      steps={steps}
+      cardRefs={cardRefs}
+      // visible={visible}
+    />
+  </div>
 
-        <div
-          ref={containerRef}
-          className="relative mt-7 sm:mt-8"
-          aria-label="AI Assistant setup steps"
-          style={{ paddingBottom: 48 }}
-        >
-          {/* Curved connectors (md+) */}
-          <svg
-            className="pointer-events-none absolute inset-0 hidden md:block"
-            width="100%"
-            height="100%"
-            viewBox={`0 0 ${containerRect?.width ?? 0} ${containerRect?.height ?? 0}`}
-            preserveAspectRatio="none"
-          >
-            <defs>
-              {/* 
-                Arrow head marker for connector lines.
-                Reduced markerWidth/markerHeight and refX/refY for a smaller, more proportional arrow head.
-                The path is also smaller and more "fit" to the line.
-              */}
-              <marker id="arrow-gray-200" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto" markerUnits="strokeWidth">
-                <path d="M0,0 L0,7 L7,3.5 z" fill="#e5e7eb"></path>
-              </marker>
-            </defs>
-            {connectors.map((c, idx) => {
-              const active = visible[c.animateWithIndex]
-              const opacity = active ? 1 : 0
-              return (
-                <g
-                  key={idx}
-                  style={{
-                    transition: "opacity 700ms ease-out",
-                    opacity,
-                  }}
-                >
-                  <path
-                    d={c.d}
-                    fill="none"
-                    stroke="#e5e7eb"
-                    strokeWidth={2}
-                    markerEnd="url(#arrow-gray-200)"
-                  />
-                </g>
-              )
-            })}
-          </svg>
+  {/* Desktop/tablet version (only visible md and above) */}
+  <div className="hidden md:block">
+    <DesktopSteps
+      steps={steps}
+      cardRefs={cardRefs}
+      visible={visible}
+      containerRef={containerRef as React.RefObject<HTMLDivElement>}
+      rightColumnOffset={rightColumnOffset}
+      CARD_WIDTH={CARD_WIDTH}
+      CARD_HEIGHT={CARD_HEIGHT}
+      ARROW_MARKER_HEIGHT={ARROW_MARKER_HEIGHT}
+    />
+  </div>
+</div>
 
-          {/* Cards grid */}
-          {/* On mobile: single column, on md+: absolute staggered two-column */}
-          <div className="relative">
-            {/* Mobile: single column */}
-            <div className="md:hidden grid grid-cols-1 gap-y-4">
-              {steps.map((step, i) => (
-                <div
-                  key={i}
-                  ref={el => { cardRefs.current[i] = el; }}
-                  data-index={i}
-                  className="relative flex w-full"
-                  style={{
-                    width: "100%",
-                    maxWidth: CARD_WIDTH,
-                    minWidth: 0,
-                    height: CARD_HEIGHT,
-                  }}
-                >
-                  <div
-                    className={[
-                      "w-full h-full",
-                      "rounded-xl border border-dashed border-zinc-200 bg-white",
-                      "shadow-sm shadow-zinc-900/5",
-                      "px-4 py-3 sm:px-5 sm:py-4",
-                      "transition-all duration-700 ease-out will-change-transform",
-                      "transform",
-                      visible[i] ? "opacity-100 translate-x-0" : "opacity-0 translate-y-10",
-                      "flex flex-col justify-center",
-                    ].join(" ")}
-                    aria-label={`Step ${i + 1}: ${step.title}`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`shrink-0 ${step.iconBg} rounded-lg p-2`}>
-                        <step.Icon className={`h-5 w-5 ${step.iconFg}`} aria-hidden="true" />
-                      </div>
-                      <div className="min-w-0">
-                        <h3 className="text-base sm:text-lg font-semibold text-zinc-900">
-                          {step.title}
-                        </h3>
-                        <p className="mt-1 text-xs sm:text-sm text-zinc-600">
-                          {step.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* Desktop: staggered two-column with equal vertical gap between left/right */}
-            <div
-              className="hidden md:block"
-              style={{
-                position: "relative",
-                // ----
-                // This is where we set the vertical gap between the boxes on desktop.
-                // The vertical gap is controlled by rightColumnOffset (default 36px).
-                // Each card's top = i * (CARD_HEIGHT + rightColumnOffset)
-                // ----
-                minHeight: steps.length * (CARD_HEIGHT + rightColumnOffset) - rightColumnOffset + 24,
-              }}
-            >
-              {steps.map((step, i) => {
-                const isLeft = i % 2 === 0
-                // For equal vertical gaps, both left and right cards are spaced evenly
-                // Each card's top = i * (CARD_HEIGHT + rightColumnOffset)
-                // ----
-                // This is where we set the vertical gap between the boxes:
-                // The value of rightColumnOffset determines the vertical space between each card.
-                // ----
-                const top = i * (CARD_HEIGHT + rightColumnOffset)
-                const left = isLeft ? 0 : `calc(100% - ${CARD_WIDTH}px)`
-                const initialShift = isLeft ? "-translate-x-10" : "translate-x-10"
-
-                return (
-                  <div
-                    key={i}
-                    ref={el => { cardRefs.current[i] = el; }}
-                    data-index={i}
-                    className="absolute"
-                    style={{
-                      top,
-                      left,
-                      width: CARD_WIDTH,
-                      height: CARD_HEIGHT,
-                      minWidth: 0,
-                      zIndex: 2,
-                    }}
-                  >
-                    <div
-                      className={[
-                        "w-full h-full",
-                        "rounded-xl border border-dashed border-zinc-200 bg-white",
-                        "shadow-sm shadow-zinc-900/5",
-                        "px-4 py-3 sm:px-5 sm:py-4",
-                        "transition-all duration-700 ease-out will-change-transform",
-                        "transform",
-                        visible[i] ? "opacity-100 translate-x-0" : `opacity-0 ${initialShift}`,
-                        "flex flex-col justify-center",
-                      ].join(" ")}
-                      aria-label={`Step ${i + 1}: ${step.title}`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className={`shrink-0 ${step.iconBg} rounded-lg p-2`}>
-                          <step.Icon className={`h-5 w-5 ${step.iconFg}`} aria-hidden="true" />
-                        </div>
-                        <div className="min-w-0">
-                          <h3 className="text-base sm:text-lg font-semibold text-zinc-900">
-                            {step.title}
-                          </h3>
-                          <p className="mt-1 text-xs sm:text-sm text-zinc-600">
-                            {step.description}
-                          </p>
-                        </div>
-                      </div>
-                      {/* Removed the decorative small down arrow at the bottom center of the card */}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   )

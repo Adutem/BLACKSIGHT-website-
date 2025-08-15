@@ -70,7 +70,7 @@ export const StepCard: React.FC<StepCardProps> = ({ title, description, image, i
         </div>
       </div>
       {/* Embedded CSS for animation */}
-      <style jsx>{`
+      <style>{`
         @keyframes slideInFromRightSlowSmall {
           from {
             opacity: 0;
