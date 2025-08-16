@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 export const Pricing: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<"solo" | "ascend" | "pinnacle">("solo");
@@ -15,31 +15,41 @@ export const Pricing: React.FC = () => {
     pinnacle: "https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTpZTTlibTNY",
   };
 
+  // Set different heights for each plan (desktop and mobile)
+  const planHeights: Record<"solo" | "ascend" | "pinnacle", { desktop: number; mobile: number }> = {
+    solo: { desktop: 900, mobile: 2000 },
+    ascend: { desktop: 900, mobile: 1800 },
+    pinnacle: { desktop: 900, mobile: 1500 },
+  };
+
   // Use a ref to force iframe reload on plan change
   const [iframeKey, setIframeKey] = useState(0);
 
-  // Responsive height for iframe
-  const [iframeHeight, setIframeHeight] = useState(1200);
+  // Responsive height for iframe based on plan and window size
+  const [iframeHeight, setIframeHeight] = useState(
+    typeof window !== "undefined" && window.innerWidth < 640
+      ? planHeights[selectedPlan].mobile
+      : planHeights[selectedPlan].desktop
+  );
 
   useEffect(() => {
     setIframeKey((k) => k + 1);
   }, [selectedPlan]);
 
-  // Adjust iframe height based on window size
+  // Adjust iframe height based on window size and selected plan
   useEffect(() => {
     function updateHeight() {
-      // On mobile, set height to window.innerHeight - header height (if any)
-      // For now, just use 100vh for mobile, 1200px for desktop
       if (window.innerWidth < 640) {
-        setIframeHeight(window.innerHeight);
+        setIframeHeight(planHeights[selectedPlan].mobile);
       } else {
-        setIframeHeight(1200);
+        setIframeHeight(planHeights[selectedPlan].desktop);
       }
     }
     updateHeight();
     window.addEventListener("resize", updateHeight);
     return () => window.removeEventListener("resize", updateHeight);
-  }, []);
+    // eslint-disable-next-line
+  }, [selectedPlan]);
 
   return (
     <main className="min-h-screen flex flex-col font-sans">
@@ -103,7 +113,10 @@ export const Pricing: React.FC = () => {
               border: "none",
               overflow: "auto",
               width: "100%",
-              minHeight: window.innerWidth < 640 ? "100vh" : "1200px",
+              minHeight:
+                typeof window !== "undefined" && window.innerWidth < 640
+                  ? `${planHeights[selectedPlan].mobile}px`
+                  : `${planHeights[selectedPlan].desktop}px`,
               display: "block",
               background: "white",
             }}
