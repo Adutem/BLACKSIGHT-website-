@@ -1,12 +1,45 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 export const Pricing: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<"solo" | "ascend" | "pinnacle">("solo");
 
   const buttonBaseClasses =
     "w-full sm:w-auto border px-6 py-2 transition-colors duration-300";
+
+  // Map plan to URLs for easier management
+  const planUrls: Record<"solo" | "ascend" | "pinnacle", string> = {
+    solo: "https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTplUURuUXd4",
+    ascend: "https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTo1MTNKNHdH",
+    pinnacle: "https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTpZTTlibTNY",
+  };
+
+  // Use a ref to force iframe reload on plan change
+  const [iframeKey, setIframeKey] = useState(0);
+
+  // Responsive height for iframe
+  const [iframeHeight, setIframeHeight] = useState(1200);
+
+  useEffect(() => {
+    setIframeKey((k) => k + 1);
+  }, [selectedPlan]);
+
+  // Adjust iframe height based on window size
+  useEffect(() => {
+    function updateHeight() {
+      // On mobile, set height to window.innerHeight - header height (if any)
+      // For now, just use 100vh for mobile, 1200px for desktop
+      if (window.innerWidth < 640) {
+        setIframeHeight(window.innerHeight);
+      } else {
+        setIframeHeight(1200);
+      }
+    }
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
+  }, []);
 
   return (
     <main className="min-h-screen flex flex-col font-sans">
@@ -57,51 +90,37 @@ export const Pricing: React.FC = () => {
       {/* Pricing iframe section - White */}
       <section className="bg-white text-black p-0 sm:p-0">
         <div className="w-full max-w-[1600px] mx-auto overflow-hidden">
-          {selectedPlan === "solo" && (
-            <iframe
-              src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTplUURuUXd4"
-              width="100%"
-              height="1200"
-              className="w-full min-h-screen !border-0 outline-none"
-              frameBorder="0"
-              scrolling="no"
-              style={{
-                border: "none",
-                overflow: "hidden",
-              }}
-              title="Solo Suite Pricing"
-            ></iframe>
-          )}
-          {selectedPlan === "ascend" && (
-            <iframe
-              src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTo1MTNKNHdH"
-              width="100%"
-              height="1200"
-              className="w-full min-h-screen !border-0 outline-none"
-              frameBorder="0"
-              scrolling="no"
-              style={{
-                border: "none",
-                overflow: "hidden",
-              }}
-              title="Ascend Pricing"
-            ></iframe>
-          )}
-          {selectedPlan === "pinnacle" && (
-            <iframe
-              src="https://os.voiceaiwrapper.app/en/embed/pricing-table/VGVuYW50UHJpY2luZ1RhYmxlVHlwZTpZTTlibTNY"
-              width="100%"
-              height="1200"
-              className="w-full min-h-screen !border-0 outline-none"
-              frameBorder="0"
-              scrolling="no"
-              style={{
-                border: "none",
-                overflow: "hidden",
-              }}
-              title="Pinnacle Pricing"
-            ></iframe>
-          )}
+          <iframe
+            key={iframeKey}
+            src={planUrls[selectedPlan]}
+            width="100%"
+            height={iframeHeight}
+            className="w-full border-0 outline-none"
+            frameBorder="0"
+            scrolling="yes"
+            allow="payment *; clipboard-write *; encrypted-media *"
+            style={{
+              border: "none",
+              overflow: "auto",
+              width: "100%",
+              minHeight: window.innerWidth < 640 ? "100vh" : "1200px",
+              display: "block",
+              background: "white",
+            }}
+            title={
+              selectedPlan === "solo"
+                ? "Solo Suite Pricing"
+                : selectedPlan === "ascend"
+                ? "Ascend Pricing"
+                : "Pinnacle Pricing"
+            }
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+          ></iframe>
+          <noscript>
+            <div className="text-center text-red-600 p-4">
+              Please enable JavaScript to view the pricing table.
+            </div>
+          </noscript>
         </div>
       </section>
     </main>
