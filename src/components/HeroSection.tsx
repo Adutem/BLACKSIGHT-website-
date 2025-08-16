@@ -168,7 +168,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           <p className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600">
-            Join The 500+ Agencies Already using Blacksight
+            Up to 500+ companies and agency tools integrated into our platform
           </p>
         </div>
 
