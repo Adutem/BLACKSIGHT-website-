@@ -113,8 +113,7 @@ export const Footer: React.FC = () => {
         {/* Lower Footer Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
           <div className="text-sm text-black-600 text-center sm:text-left mb-2 sm:mb-0">
-            <p>Automate your business with the smart Blacksight AI for Business</p>
-            <p>Unlock your Business full Potential today</p>
+            <p>Your Vision, Our Priority</p>
           </div>
           <div className="text-sm text-black-600 text-center sm:text-right">
             © Copyright Reserved 2025 | Adutem Innovations
